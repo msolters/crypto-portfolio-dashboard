@@ -27,11 +27,13 @@ $ meteor
 ## Adding Coins
 Simply click the "Add Coin" button.  A new coin box will appear.
 
-The coin name *must* match the `id` field for the coin according to coinmarketcap's API, listed here: https://api.coinmarketcap.com/v1/ticker/
+Next, enter the coin ID in the first text entry field.  *The coin name must match the `id` field for the coin according to coinmarketcap's API.*  Valid IDs can be seen here: https://api.coinmarketcap.com/v1/ticker/
 
 > Note: If you enter an invalid coin name (one that isn't recognized by coinmarketcap), portfolio data will not update until it is removed or fixed.
 
-New coins will be reflected in the portfolio data within 15 minutes.
+Finally, enter the quantity of that coin which you own.
+
+Changes to coins will be reflected in the portfolio data within 15 minutes.
 
 ## Setting Investment Level
 The "Invested" box is editable.  Here, you can enter the amount of fiat you've put into your portfolio total.  This is used to determine your portfolio's effective return and performance.
