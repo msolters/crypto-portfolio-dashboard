@@ -1,0 +1,130 @@
+<head>
+  <title>crypto-portfolio</title>
+</head>
+
+<body>
+  <h2>Portfolio</h2>
+  <div class="console-grid">
+    {{> displayPerformance}}
+    {{> displayHistory}}
+    {{> displayReturn}}
+    {{> displayAllocation}}
+  </div>
+  {{> displayHoldings}}
+  <!--{{> editHoldings}}-->
+</body>
+
+<template name="editHoldings">
+  <form id="edit-holdings">
+    <textarea id="holdings-text" rows=12 cols=30></textarea>
+    <button type="submit">Save</button>
+  </form>
+</template>
+
+<template name="displayHoldings">
+  <h2>Currencies</h2>
+  <div id="asset-grid">
+    {{#if holdings}}
+      {{#each holdings }}
+        <div class="card-box asset-box">
+          <button data-delete-coin type="button">Remove</button>
+          <div>
+            <div class="card-box-title">
+              <input data-edit-holding-symbol type="text" value="{{symbol}}"/>
+            </div>
+            <div class="card-box-small-content">
+              <input data-edit-holding-quantity type="text" value="{{quantity}}"/>
+            </div>
+            <div class="card-box-small-content">
+              <span class="asset-cash-value">
+                {{coinValue symbol}}
+              </span>
+              <span class="asset-cash-price">
+                ({{coinPrice symbol}})
+              </span>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    {{else}}
+      <div class="card-box asset-box">
+        <span>
+          <div class="card-box-title">
+            Coins
+          </div>
+          <div class="card-box-small-content">
+            <span>
+              No coins on file.  Add one!
+            </span>
+          </div>
+        </span>
+      </div>
+    {{/if}}
+    <div class="card-box asset-box">
+      <span>
+        <div class="card-box-title"></div>
+        <div class="card-box-small-content">
+          <center>
+            <button type="button" data-add-coin>
+              Add Coin
+            </button>
+          </center>
+        </div>
+      </span>
+    </div>
+  </div>
+</template>
+
+<template name="displayHistory">
+  <div id="coin-performance-chart" style="height: 100%;"></div>
+</template>
+
+<template name="displayReturn">
+  <div id="return-performance-box" class="card-box">
+    <span>
+      <div class="card-box-title">
+        Performance
+      </div>
+      <div class="card-box-content">
+        {{formatFixed portfolio.performance}}%
+      </div>
+    </span>
+  </div>
+</template>
+
+<template name="displayAllocation">
+  <div id="coin-allocation-chart" style="height: 100%;" class="card-box"></div>
+</template>
+
+<template name="displayPerformance">
+  <div class="card-box performance-box">
+    <span>
+      <div class="card-box-title">
+        Total
+      </div>
+      <div class="card-box-content">
+        {{formatMoney portfolio.total}}
+      </div>
+    </span>
+  </div>
+  <div class="card-box performance-box">
+    <span>
+      <div class="card-box-title">
+        Invested
+      </div>
+      <div class="card-box-content">
+        $<input data-edit-invested type="text" value="{{formatFixed invested}}"/>
+      </div>
+    </span>
+  </div>
+  <div class="card-box performance-box">
+    <span>
+      <div class="card-box-title">
+        Return
+      </div>
+      <div class="card-box-content">
+        {{formatMoney portfolio.return}}
+      </div>
+    </span>
+  </div>
+</template>

@@ -1,0 +1,120 @@
+/* CSS declarations go here */
+body {
+  background-color: #2c2a2a;
+  color: #fff;
+  padding: 30px;
+  font-family: Helvetica;
+}
+.console-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: repeat(4, 1fr);
+  grid-column-gap: 20px;
+  grid-row-gap: 10px;
+  justify-content: stretch;
+  align-items: stretch;
+}
+.console-grid > div {
+  overflow: hidden;
+  border-radius: 5px;
+}
+.card-box {
+  height: 200px;
+  display: grid;
+  border-radius: 5px;
+  background-color: #3c3a3a;
+  position: relative;
+}
+.card-box > * {
+  margin: auto;
+}
+.card-box-title {
+  color: #aaa;
+  font-weight: lighter;
+}
+.card-box-content {
+  font-size: 3em;
+  color: #fff;
+  font-weight: bold;
+}
+
+.performance-box {
+  grid-row: 1;
+  grid-column: span 1;
+}
+input[data-edit-invested] {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 1em;
+  width: 5em;
+  font-weight: bold;
+}
+#coin-performance-chart {
+  grid-row: 2 / 5;
+  grid-column: 1 / 3;
+}
+#return-performance-box {
+  grid-row: 2;
+  grid-column: 3;
+}
+#coin-allocation-chart {
+  grid-row: 3/5;
+  grid-column: 3;
+}
+
+#asset-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 20px;
+  justify-content: stretch;
+}
+.asset-box {
+  grid-column: span 1;
+  padding: 0px;
+}
+.asset-box input {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  padding: 5px;
+  font-size: 20px;
+}
+.asset-box button {
+  padding: 15px;
+  border: none;
+  border-radius: 0;
+  color: #fff;
+  cursor: pointer;
+}
+button[data-add-coin] {
+  background-color: #228B22;
+  font-size: 1.3em;
+}
+button[data-delete-coin] {
+  background-color: #962323;
+  padding: 5px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border-radius: 3px;
+}
+input[data-edit-holding-quantity] {
+  font-size: 2em;
+}
+.card-box-small-content {
+  width: 20em;
+}
+.card-box-small-content > span {
+  padding-left: 5px;
+}
+.asset-cash-value {
+  font-size: 2em;
+  font-weight: lighter;
+  color: #228B22;
+}
+.asset-cash-price {
+  color: #aaa;
+}
