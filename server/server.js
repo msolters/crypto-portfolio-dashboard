@@ -4,9 +4,11 @@ import { HTTP } from 'meteor/http';
 function get_coin( coin ) {
   return new Promise( (resolve, reject) => {
     const request_url = `https://api.coinmarketcap.com/v1/ticker/${coin}/?convert=USD`
-    //console.log(request_url)
     HTTP.call( "GET", request_url, (err, resp) => {
-      if( err ) reject( err )
+      if( err ) {
+        reject( err )
+        return
+      }
       let data = resp.data[0]
       resolve(data)
     })
