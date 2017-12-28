@@ -1,15 +1,29 @@
 /* CSS declarations go here */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  zoom: 1;
+  margin: 0;
+}
 body {
   background-color: #2c2a2a;
   color: #fff;
-  padding: 30px;
+  padding: 10px;
   font-family: Helvetica;
+  width: calc(100% - 20px);
 }
 .console-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: repeat(4, 1fr);
-  grid-column-gap: 20px;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "total"
+    "invested"
+    "return"
+    "performance"
+    "allocation"
+    "history";
+  grid-gap: 10px;
   grid-row-gap: 10px;
   justify-content: stretch;
   align-items: stretch;
@@ -28,6 +42,7 @@ body {
 .card-box > * {
   margin: auto;
 }
+
 .card-box-title {
   color: #aaa;
   font-weight: lighter;
@@ -38,10 +53,25 @@ body {
   font-weight: bold;
 }
 
-.performance-box {
-  grid-row: 1;
-  grid-column: span 1;
+.total {
+  grid-area: total;
 }
+.invested {
+  grid-area: invested;
+}
+.return {
+  grid-area: return;
+}
+.performance {
+  grid-area: performance;
+}
+.allocation {
+  grid-area: allocation;
+}
+.history {
+  grid-area: history;
+}
+
 input[data-edit-invested] {
   background-color: transparent;
   border: none;
@@ -51,24 +81,34 @@ input[data-edit-invested] {
   width: 5em;
   font-weight: bold;
 }
-#coin-performance-chart {
-  grid-row: 2 / 5;
-  grid-column: 1 / 3;
+@media screen and (min-width: 1280px) {
+  .console-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 10px;
+    grid-template-areas:
+      "total invested return"
+      "history history performance"
+      "history history allocation"
+      "history history allocation";
+  }
 }
-#return-performance-box {
-  grid-row: 2;
-  grid-column: 3;
-}
-#coin-allocation-chart {
-  grid-row: 3/5;
-  grid-column: 3;
-}
+
 
 #asset-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-gap: 20px;
-  justify-content: stretch;
+  grid-template-columns: 1fr;
+}
+@media screen and (min-width: 1280px) {
+  #asset-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+  }
+}
+@media screen and (min-width: 1600px) {
+  #asset-grid {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;
+  }
 }
 .asset-box {
   grid-column: span 1;
@@ -105,7 +145,7 @@ input[data-edit-holding-quantity] {
   font-size: 2em;
 }
 .card-box-small-content {
-  width: 20em;
+  width: 20px;
 }
 .card-box-small-content > span {
   padding-left: 5px;

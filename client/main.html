@@ -11,15 +11,7 @@
     {{> displayAllocation}}
   </div>
   {{> displayHoldings}}
-  <!--{{> editHoldings}}-->
 </body>
-
-<template name="editHoldings">
-  <form id="edit-holdings">
-    <textarea id="holdings-text" rows=12 cols=30></textarea>
-    <button type="submit">Save</button>
-  </form>
-</template>
 
 <template name="displayHoldings">
   <h2>Currencies</h2>
@@ -75,12 +67,8 @@
   </div>
 </template>
 
-<template name="displayHistory">
-  <div id="coin-performance-chart" style="height: 100%;"></div>
-</template>
-
 <template name="displayReturn">
-  <div id="return-performance-box" class="card-box">
+  <div id="return-performance-box" class="card-box performance">
     <span>
       <div class="card-box-title">
         Performance
@@ -93,11 +81,15 @@
 </template>
 
 <template name="displayAllocation">
-  <div id="coin-allocation-chart" style="height: 100%;" class="card-box"></div>
+  <div id="coin-allocation-chart" style="height: 100%;" class="card-box allocation"></div>
+</template>
+
+<template name="displayHistory">
+  <div id="coin-performance-chart" class="card-box history" style="height: 100%;"></div>
 </template>
 
 <template name="displayPerformance">
-  <div class="card-box performance-box">
+  <div class="card-box total">
     <span>
       <div class="card-box-title">
         Total
@@ -107,7 +99,7 @@
       </div>
     </span>
   </div>
-  <div class="card-box performance-box">
+  <div class="card-box invested">
     <span>
       <div class="card-box-title">
         Invested
@@ -117,7 +109,7 @@
       </div>
     </span>
   </div>
-  <div class="card-box performance-box">
+  <div class="card-box return">
     <span>
       <div class="card-box-title">
         Return
