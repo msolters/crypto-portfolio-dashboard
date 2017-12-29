@@ -32,6 +32,7 @@ Template.displayHistory.onRendered( function() {
       },
       xAxis: {
         type: 'datetime',
+        crosshair: true,
         title: {
           text: 'Time',
           style: {
@@ -61,12 +62,18 @@ Template.displayHistory.onRendered( function() {
         }
       },
       tooltip: {
-          pointFormat: '${point.y:,.0f} of {series.name}'
+        shared: true,
+        pointFormat: '${point.y:.0f} of {series.name}<br>'
       },
       plotOptions: {
         series: {
           stacking: 'normal',
         },
+        line: {
+          marker: {
+            enabled: false
+          }
+        }
       },
       series: []
     });
