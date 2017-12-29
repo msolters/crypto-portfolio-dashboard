@@ -12,6 +12,7 @@ body {
   padding: 10px;
   font-family: Helvetica;
   width: calc(100% - 20px);
+  font-size: 200%;
 }
 .console-grid {
   display: grid;
@@ -33,7 +34,8 @@ body {
   border-radius: 5px;
 }
 .card-box {
-  height: 200px;
+  padding-top: 2em;
+  padding-bottom: 2em;
   display: grid;
   border-radius: 5px;
   background-color: #3c3a3a;
@@ -42,7 +44,12 @@ body {
 .card-box > * {
   margin: auto;
 }
-
+.card-box-small-content {
+  width: 80%;
+}
+.card-box-small-content > span {
+  padding-left: 5px;
+}
 .card-box-title {
   color: #aaa;
   font-weight: lighter;
@@ -67,11 +74,13 @@ body {
 }
 .allocation {
   grid-area: allocation;
+  min-height: 500px;
 }
 .history {
   grid-area: history;
+  min-height: 500px;
+  padding-right: 20px;
 }
-
 input[data-edit-invested] {
   background-color: transparent;
   border: none;
@@ -81,7 +90,11 @@ input[data-edit-invested] {
   width: 5em;
   font-weight: bold;
 }
+
 @media screen and (min-width: 1280px) {
+  body {
+    font-size: 100%;
+  }
   .console-grid {
     grid-template-columns: 1fr 1fr 1fr;
     grid-column-gap: 10px;
@@ -93,22 +106,13 @@ input[data-edit-invested] {
   }
 }
 
-
+.card-box-inner {
+  padding: 1em;
+}
 #asset-grid {
   display: grid;
   grid-template-columns: 1fr;
-}
-@media screen and (min-width: 1280px) {
-  #asset-grid {
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 10px;
-  }
-}
-@media screen and (min-width: 1600px) {
-  #asset-grid {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-gap: 10px;
-  }
+  grid-row-gap: 10px;
 }
 .asset-box {
   grid-column: span 1;
@@ -120,7 +124,6 @@ input[data-edit-invested] {
   outline: none;
   color: #fff;
   padding: 5px;
-  font-size: 20px;
 }
 .asset-box button {
   padding: 15px;
@@ -132,6 +135,8 @@ input[data-edit-invested] {
 button[data-add-coin] {
   background-color: #228B22;
   font-size: 1.3em;
+  height: 100%;
+  width: 100%;
 }
 button[data-delete-coin] {
   background-color: #962323;
@@ -140,15 +145,13 @@ button[data-delete-coin] {
   top: 10px;
   right: 10px;
   border-radius: 3px;
+  font-size: 1em;
+}
+input[data-edit-holding-symbol] {
+  font-size: 1.5em;
 }
 input[data-edit-holding-quantity] {
   font-size: 2em;
-}
-.card-box-small-content {
-  width: 20px;
-}
-.card-box-small-content > span {
-  padding-left: 5px;
 }
 .asset-cash-value {
   font-size: 2em;
@@ -157,4 +160,22 @@ input[data-edit-holding-quantity] {
 }
 .asset-cash-price {
   color: #aaa;
+}
+@media screen and (min-width: 1280px) {
+  #asset-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+  }
+  .card-box-inner {
+    padding-left: 2em;
+  }
+  input[data-edit-holding-symbol] {
+    font-size: 1em;
+  }
+}
+@media screen and (min-width: 1600px) {
+  #asset-grid {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;
+  }
 }
