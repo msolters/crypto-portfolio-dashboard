@@ -45,7 +45,7 @@ Template.performanceChart.onRendered( function() {
       },
       yAxis: {
         title: {
-          text: '%',
+          text: 'ROI (%)',
           style: {
             color: '#fff'
           }
@@ -64,10 +64,13 @@ Template.performanceChart.onRendered( function() {
       },
       plotOptions: {
         series: {
-          stacking: 'normal',
           marker: {
             enabled: false
           }
+        },
+        line: {
+          fillColor: '#228B22',
+          lineColor: '#228B22'
         }
       },
       series: []
