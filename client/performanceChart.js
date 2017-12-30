@@ -14,12 +14,7 @@ Template.performanceChart.onRendered( function() {
           }
       },
       legend: {
-        itemStyle: {
-          color: '#fff'
-        },
-        layout: "vertical",
-        align: "center",
-        verticalAlign: "bottom"
+        enabled: false
       },
       title: {
           text: 'Return Performance',
