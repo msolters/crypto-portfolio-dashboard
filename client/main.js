@@ -17,6 +17,7 @@ Template.registerHelper('formatMoney', (m) => {
 })
 Template.registerHelper('formatFixed', (m) => {
   if( !m ) return 0
+  m = parseFloat(m)
   return m.toFixed(2)
 })
 Template.registerHelper('invested', () => {
