@@ -16,7 +16,10 @@ Template.displayHistory.onRendered( function() {
       legend: {
         itemStyle: {
           color: '#fff'
-        }
+        },
+        layout: "vertical",
+        align: "right",
+        verticalAlign: "middle"
       },
       title: {
           text: 'Portfolio Performance',
@@ -68,8 +71,6 @@ Template.displayHistory.onRendered( function() {
       plotOptions: {
         series: {
           stacking: 'normal',
-        },
-        line: {
           marker: {
             enabled: false
           }
