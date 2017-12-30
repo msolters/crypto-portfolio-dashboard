@@ -9,6 +9,7 @@
     {{> displayHistory}}
     {{> displayReturn}}
     {{> displayAllocation}}
+    {{> performanceChart}}
   </div>
   {{> displayHoldings}}
 </body>
@@ -32,6 +33,10 @@
 
 <template name="displayHistory">
   <div id="coin-performance-chart" class="card-box history"></div>
+</template>
+
+<template name="performanceChart">
+  <div id="performance-chart" class="card-box performance-chart"></div>
 </template>
 
 <template name="displayPerformance">

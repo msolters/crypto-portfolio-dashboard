@@ -81,6 +81,11 @@ body {
   min-height: 500px;
   padding-right: 20px;
 }
+.performance-chart {
+  grid-area: performance-chart;
+  min-height: 300px;
+  padding-right: 20px;
+}
 input[data-edit-invested] {
   background-color: transparent;
   border: none;
@@ -101,7 +106,7 @@ input[data-edit-invested] {
     grid-template-areas:
       "total invested return"
       "history history performance"
-      "history history allocation"
+      "history history performance-chart"
       "history history allocation";
   }
 }
