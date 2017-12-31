@@ -13,7 +13,6 @@ const update_holding_symbol = _.debounce( (holding, tmpl) => {
       symbol: tmpl.find('input[data-edit-holding-symbol]').value
     }
   }
-  console.log(holding_update)
   Holdings.update(holding_q, holding_update)
 
   //  Create a new allocation snapshot

@@ -94,29 +94,34 @@ Meteor.methods({
       //  Combine allocation snapshots into single array
       if( first_allocation_snapshot ) allocation_snapshots.unshift(first_allocation_snapshot)
       if( !allocation_snapshots.length ) continue
-
       let a_idx = 0
       let m_idx = 0
-      while( m_idx < market_snapshots.length && a_idx < allocation_snapshots.length ) {
-        //  Skip market data we don't have allocations for
-        while( m_idx < market_snapshots.length && market_snapshots[m_idx].ts < allocation_snapshots[0].createdAt ) {
-          m_idx++
+      while( m_idx < market_snapshots.length  ) {
+        while( a_idx < allocation_snapshots.length ) {
+          //  Skip market data we don't have allocations for
+          let skip_flag = false
+          while( m_idx < market_snapshots.length && market_snapshots[m_idx].ts < allocation_snapshots[0].createdAt ) {
+            skip_flag = true
+            m_idx++
+          }
+          if( skip_flag ) m_idx -= 1
+
+          //  Get a new market snapshot
+          let m = market_snapshots[ Math.max(m_idx, 0) ]
+
+          //  Ensure we're using the latest possible allocation snapshot
+          let a_idx_offset = 0
+          while( (a_idx+a_idx_offset <= allocation_snapshots.length-1) && (allocation_snapshots[ a_idx + a_idx_offset ].createdAt <= m.ts) ) a_idx_offset++
+          a_idx += Math.max((a_idx_offset-1), 0)
+
+          //  Get a new allocation snapshot
+          let a = allocation_snapshots[ a_idx ]
+
+          //  Compute a new portfolio snapshot using the
+          Meteor.call('compute_portfolio_snapshot', a, m, userId)
+
+          a_idx++
         }
-
-        //  Get a new market snapshot
-        let m = market_snapshots[ Math.max(m_idx-1, 0) ]
-
-        //  Ensure we're using the latest possible allocation snapshot
-        let a_idx_offset = 0
-        while( (a_idx+a_idx_offset <= allocation_snapshots.length-1) && (allocation_snapshots[ a_idx + a_idx_offset ].createdAt <= m.ts) ) a_idx_offset++
-        a_idx += Math.max((a_idx_offset-1), 0)
-
-        //  Get a new allocation snapshot
-        let a = allocation_snapshots[ a_idx ]
-
-        //  Compute a new portfolio snapshot using the
-        Meteor.call('compute_portfolio_snapshot', a, m, userId)
-
         //  Get the next market snapshot
         m_idx++
       }
@@ -173,10 +178,10 @@ Meteor.methods({
     let portfolio_snapshot = {
       userId: userId,
       ts: m.createdAt,
-      invested: a.invested,
       coins: {}
     }
 
+    let invested = (a.invested) ? a.invested : 0
     let portfolio_snapshot_q = {
       userId: userId,
       ts: m.ts,
@@ -184,32 +189,25 @@ Meteor.methods({
     }
     let portfolio_snapshot_modifier = {
       $set: {
-        invested: a.invested
+        invested: invested
       }
     }
 
     let total_portfolio_value = 0
-    let invalid_coins = []
     _.each(a.coins, (quantity, coin) => {
       let coin_data = _.findWhere(m.coins, {
         id: coin
       })
-      if( !coin_data ) {
-        //  This coin is not valid!
-        invalid_coins.push(coin)
-        return
-      }
+      if( !coin_data ) return
       coin_data.coin_value = coin_data.price_usd * quantity / coin_data.samples
       total_portfolio_value += coin_data.coin_value
       portfolio_snapshot_modifier.$set[`coins.${coin}`] = coin_data
     })
 
-    let return_value = total_portfolio_value - a.invested
+    let return_value = total_portfolio_value - invested
     portfolio_snapshot_modifier.$set.total = total_portfolio_value
     portfolio_snapshot_modifier.$set.return = return_value
-    portfolio_snapshot_modifier.$set.performance = return_value / a.invested * 100
-    //portfolio_snapshot_modifier.$set.last_synced = new Date()
-    console.log(portfolio_snapshot_q)
+    portfolio_snapshot_modifier.$set.performance = (invested) ? return_value / invested * 100 : 0
     PortfolioSnapshots.update( portfolio_snapshot_q, portfolio_snapshot_modifier, {upsert: true} )
   },
 
