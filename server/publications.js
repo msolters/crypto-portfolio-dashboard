@@ -2,17 +2,17 @@ Meteor.publish( "PortfolioSnapshots", (granularity, now) => {
   const aggregate_q = {
     'minute': {
       't0'() {
-        return moment(now).subtract(1, 'hour').toDate()
+        return moment.utc(now).subtract(1, 'hour').toDate()
       }
     },
     'hour': {
       't0'() {
-        return moment(now).subtract(1, 'day').toDate()
+        return moment.utc(now).subtract(1, 'day').toDate()
       }
     },
     'day': {
       't0'() {
-        return moment(now).subtract(1, 'month').toDate()
+        return moment.utc(now).subtract(1, 'month').toDate()
       }
     }
   }

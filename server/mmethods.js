@@ -107,13 +107,12 @@ Meteor.methods({
         while( m_idx < market_snapshots.length && a_idx < allocation_snapshots.length ) {
           //  Skip market data we don't have allocations for
           loop2:
-            while( market_snapshots[m_idx].ts < allocation_snapshots[a_idx].createdAt ) {
+            while( m_idx < market_snapshots.length && market_snapshots[m_idx].ts < allocation_snapshots[0].createdAt ) {
               m_idx++
-              if( m_idx >= market_snapshots.length ) break loop1
             }
 
           //  Get a new market snapshot
-          let m = market_snapshots[ m_idx ]
+          let m = market_snapshots[ Math.max(m_idx-1, 0) ]
 
           //  Ensure we're using the latest possible allocation snapshot
           let a_idx_offset = 0
@@ -327,7 +326,7 @@ Meteor.methods({
         m.granularity = granularity
         m.ts = ts_date_constructors[granularity](m._id.ts)
         let market_snapshot_q = {
-          granularity,
+          granularity: m.granularity,
           ts: m.ts
         }
         let market_snapshot_modifier = {
