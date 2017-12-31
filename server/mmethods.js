@@ -22,7 +22,6 @@ Meteor.methods({
     if( !market_snapshot ) return
     let invalid_coins = []
     _.each(allocation_snapshot.coins, (quantity, coin) => {
-      console.log(coin)
       let coin_data = _.findWhere(market_snapshot.coins, {
         id: coin
       })
