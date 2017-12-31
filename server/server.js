@@ -48,15 +48,6 @@ const get_market_snapshot = () => {
 }
 
 Meteor.startup(() => {
-  /*  TODO: by user
-  if( !Funds.findOne({_id: 'invested'}) ) {
-    Funds.insert({
-      _id: "invested",
-      value: 0
-    })
-  }
-  */
-
   //  Get and store market data every 1 minute
   get_market_snapshot()
   Meteor.setInterval( get_market_snapshot, 5000 )
