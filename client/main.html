@@ -3,7 +3,7 @@
 </head>
 
 <body>
-  <h2>Portfolio</h2>
+  {{> displayHoldings}}
   <div class="console-grid">
     {{> granularity}}
     {{> displayPerformance}}
@@ -12,23 +12,22 @@
     {{> displayAllocation}}
     {{> performanceChart}}
   </div>
-  {{> displayHoldings}}
 </body>
 
 <template name="granularity">
   <div class="card-box asset-box granularity minute">
     <button type="button" data-set-granularity-minute class="granularity-button {{#if granularityIs 'minute'}}selected{{/if}}">
-      Last 60 Min
+      60 Min
     </button>
   </div>
   <div class="card-box asset-box granularity hour">
     <button data-set-granularity-hour type="button" class="granularity-button {{#if granularityIs 'hour'}}selected{{/if}}">
-      Last 24 Hrs
+      24 Hrs
     </button>
   </div>
   <div class="card-box asset-box granularity day">
     <button data-set-granularity-day type="button" class="granularity-button {{#if granularityIs 'day'}}selected{{/if}}">
-      Last 30 Days
+      30 Days
     </button>
   </div>
 </template>
@@ -92,8 +91,12 @@
 </template>
 
 <template name="displayHoldings">
-  <h2>Currencies</h2>
   <div id="asset-grid">
+    <div class="card-box asset-box">
+      <button type="button" data-add-coin>
+        Add Coin
+      </button>
+    </div>
     {{#if holdings}}
       {{#each holdings }}
         <div class="card-box asset-box">
@@ -130,10 +133,5 @@
         </span>
       </div>
     {{/if}}
-    <div class="card-box asset-box">
-      <button type="button" data-add-coin>
-        Add Coin
-      </button>
-    </div>
   </div>
 </template>

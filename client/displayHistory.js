@@ -1,7 +1,3 @@
-Template.displayHistory.onCreated( function() {
-  // this.subscribe('LastDay')
-})
-
 Template.displayHistory.onRendered( function() {
   const self = this;
   Meteor.setTimeout( function() {
@@ -22,26 +18,14 @@ Template.displayHistory.onRendered( function() {
         verticalAlign: "middle"
       },
       title: {
-          text: 'Portfolio Performance',
-          style: {
-            color: '#fff'
-          }
-      },
-      subtitle: {
-          text: 'Last 24 Hours',
-          style: {
-            color: '#fff',
-          }
+        text: null,
+        style: {
+          color: '#fff'
+        }
       },
       xAxis: {
         type: 'datetime',
         crosshair: true,
-        title: {
-          text: 'Time',
-          style: {
-            color: '#fff'
-          }
-        },
         labels: {
           style: {
             color: "#fff"

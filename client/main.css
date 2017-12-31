@@ -1,18 +1,32 @@
+@font-face {
+  font-family: 'Fira Code';
+  src: url('FiraCode-Regular.otf') format('opentype');
+}
 /* CSS declarations go here */
+
 html,
 body {
   width: 100%;
   max-width: 100%;
   zoom: 1;
   margin: 0;
+  font-family: 'Fira Code';
+}
+* {
+  font-family: 'Fira Code';
 }
 body {
   background-color: #2c2a2a;
   color: #fff;
   padding: 10px;
-  font-family: Helvetica;
   width: calc(100% - 20px);
   font-size: 200%;
+}
+button {
+  opacity: 0.9;
+}
+button:hover {
+  opacity: 1;
 }
 .console-grid {
   display: grid;
@@ -29,7 +43,7 @@ body {
     "allocation"
     "history";
   grid-gap: 10px;
-  grid-row-gap: 10px;
+  grid-row-gap: 20px;
   justify-content: stretch;
   align-items: stretch;
 }
@@ -78,11 +92,11 @@ body {
 }
 .allocation {
   grid-area: allocation;
-  min-height: 500px;
+  min-height: 400px;
 }
 .history {
   grid-area: history;
-  min-height: 500px;
+  min-height: 400px;
   padding-right: 20px;
 }
 .performance-chart {
@@ -93,6 +107,7 @@ body {
 .granularity {
 }
 .granularity.minute {
+  margin-top: 0.5em;
   grid-area: granularity-minute;
 }
 .granularity.hour {
@@ -100,6 +115,7 @@ body {
 }
 .granularity.day {
   grid-area: granularity-day;
+  margin-bottom: 0.5em;
 }
 .granularity-button {
   height: 100%;
@@ -121,7 +137,7 @@ input[data-edit-invested] {
   outline: none;
   color: #fff;
   font-size: 1em;
-  width: 4em;
+  width: 5em;
   font-weight: bold;
 }
 
@@ -131,23 +147,31 @@ input[data-edit-invested] {
   }
   .console-grid {
     grid-template-columns: 1fr 1fr 1fr;
-    grid-column-gap: 10px;
+    grid-gap: 10px;
     grid-template-areas:
-      "total invested return"
       "granularity-minute granularity-hour granularity-day"
+      "total invested return"
       "history history performance"
       "history history performance-chart"
       "history history allocation";
+  }
+  .granularity.minute,
+  .granularity.day {
+    margin: initial;
   }
 }
 
 .card-box-inner {
   padding: 1em;
+  width: calc(100% - 2em);
 }
 #asset-grid {
   display: grid;
   grid-template-columns: 1fr;
   grid-row-gap: 10px;
+  margin-bottom: 20px;
+  justify-content: stretch;
+  align-items: stretch;
 }
 .asset-box {
   grid-column: span 1;
@@ -177,7 +201,7 @@ button[data-delete-coin] {
   background-color: #962323;
   padding: 5px;
   position: absolute;
-  top: 10px;
+  bottom: 10px;
   right: 10px;
   border-radius: 3px;
   font-size: 1em;
@@ -205,7 +229,7 @@ input[data-edit-holding-quantity] {
     padding-left: 2em;
   }
   .granularity-button {
-    font-size: 1em;
+    font-size: 1.2em;
   }
   input[data-edit-holding-symbol] {
     font-size: 1em;

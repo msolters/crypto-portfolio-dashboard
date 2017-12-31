@@ -17,13 +17,7 @@ Template.performanceChart.onRendered( function() {
         enabled: false
       },
       title: {
-          text: 'Return Performance',
-          style: {
-            color: '#fff'
-          }
-      },
-      subtitle: {
-          text: 'Last 24 Hours',
+          text: null,
           style: {
             color: '#fff'
           }
@@ -32,7 +26,7 @@ Template.performanceChart.onRendered( function() {
         type: 'datetime',
         crosshair: true,
         title: {
-          text: 'Time',
+          text: null,
           style: {
             color: '#fff'
           }
@@ -45,14 +39,14 @@ Template.performanceChart.onRendered( function() {
       },
       yAxis: {
         title: {
-          text: 'ROI (%)',
+          text: null,
           style: {
             color: '#fff'
           }
         },
         labels: {
           formatter: function () {
-            return this.value.toFixed(0) + '%';
+            return this.value.toFixed(2) + '%';
           },
           style: {
             color: '#fff'

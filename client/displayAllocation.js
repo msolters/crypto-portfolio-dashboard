@@ -15,7 +15,7 @@ Template.displayAllocation.onRendered( function() {
         }
       },
       title: {
-          text: 'Portfolio Allocation',
+          text: null,
           style: {
             color: '#fff'
           }
