@@ -67,7 +67,7 @@ Meteor.methods({
       })
       .fetch()
       if( !market_snapshots || !market_snapshots.length ) continue
-      // console.log(`Processing ${market_snapshots.length} market snapshots...`)
+      //console.log(`Processing ${market_snapshots.length} market snapshots...`)
 
       //  Get the first allocation snapshot corresponding to this market data
       let first_allocation_snapshot_q = {
@@ -142,6 +142,16 @@ Meteor.methods({
       }
     }, {
       multi: true
+    })
+
+    SyncStatus.update({
+      _id: 'status'
+    }, {
+      $set: {
+        last_synced: new Date()
+      }
+    }, {
+      upsert: true
     })
   },
 
