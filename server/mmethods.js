@@ -2,11 +2,15 @@
 
 Meteor.methods({
   'update_allocation_snapshot'() {
-    let holdings = Holdings.find().fetch()
-    let invested = Funds.findOne()
+    user_q = {
+      userId: Meteor.userId()
+    }
+    let holdings = Holdings.find(user_q).fetch()
+    let funds = Funds.findOne(user_q)
     let allocation_snapshot = {
+      userId: Meteor.userId(),
       createdAt: new Date(),
-      invested: invested.value,
+      invested: funds.invested,
       coins: {}
     }
     _.forEach(holdings, (h) => {
@@ -28,9 +32,7 @@ Meteor.methods({
       if( !coin_data ) invalid_coins.push(coin)
     })
     let newErrorMsg = (invalid_coins.length) ? `Invalid Coinmarketcap IDs: ${invalid_coins}` : null
-    SyncStatus.update({
-      _id: 'status'
-    }, {
+    SyncStatus.update(user_q, {
       $set: {
         errorMsg: newErrorMsg,
         last_synced: new Date()
@@ -40,17 +42,7 @@ Meteor.methods({
     })
   },
 
-  'process_portfolios'() {
-    //  Get all un-processed MarketSnapshots
-    let market_snapshot_ids = MarketSnapshots.find({
-      processed: false
-    }, {
-      fields: {
-        _id: 1
-      }
-    }).fetch()
-    market_snapshot_ids = market_snapshot_ids.map(m => m._id)
-
+  'process_portfolios'(market_snapshot_ids, userId) {
     for( let granularity of ['minute', 'hour', 'day'] ) {
       //  Get all un-processed market snapshots for this granularity
       let market_snapshots_q = {
@@ -66,11 +58,12 @@ Meteor.methods({
         }
       })
       .fetch()
-      if( !market_snapshots || !market_snapshots.length ) continue
+      if( !market_snapshots || !market_snapshots.length ) return
       //console.log(`Processing ${market_snapshots.length} market snapshots...`)
 
       //  Get the first allocation snapshot corresponding to this market data
       let first_allocation_snapshot_q = {
+        userId: userId,
         createdAt: {
           $lte: market_snapshots[0].ts
         }
@@ -85,6 +78,7 @@ Meteor.methods({
       //  Get the remainder of any allocation snapshots corresponding to this
       //  market data
       let allocation_snapshot_q = {
+        userId: userId,
         createdAt: {
           $gt: market_snapshots[0].ts
         }
@@ -103,32 +97,63 @@ Meteor.methods({
 
       let a_idx = 0
       let m_idx = 0
-      loop1:
-        while( m_idx < market_snapshots.length && a_idx < allocation_snapshots.length ) {
-          //  Skip market data we don't have allocations for
-          loop2:
-            while( m_idx < market_snapshots.length && market_snapshots[m_idx].ts < allocation_snapshots[0].createdAt ) {
-              m_idx++
-            }
-
-          //  Get a new market snapshot
-          let m = market_snapshots[ Math.max(m_idx-1, 0) ]
-
-          //  Ensure we're using the latest possible allocation snapshot
-          let a_idx_offset = 0
-          while( (a_idx+a_idx_offset <= allocation_snapshots.length-1) && (allocation_snapshots[ a_idx + a_idx_offset ].createdAt <= m.ts) ) a_idx_offset++
-          a_idx += Math.max((a_idx_offset-1), 0)
-
-          //  Get a new allocation snapshot
-          let a = allocation_snapshots[ a_idx ]
-
-          //  Compute a new portfolio snapshot using the
-          Meteor.call('compute_portfolio_snapshot', a, m)
-
-          //  Get the next market snapshot
+      while( m_idx < market_snapshots.length && a_idx < allocation_snapshots.length ) {
+        //  Skip market data we don't have allocations for
+        while( m_idx < market_snapshots.length && market_snapshots[m_idx].ts < allocation_snapshots[0].createdAt ) {
           m_idx++
         }
+
+        //  Get a new market snapshot
+        let m = market_snapshots[ Math.max(m_idx-1, 0) ]
+
+        //  Ensure we're using the latest possible allocation snapshot
+        let a_idx_offset = 0
+        while( (a_idx+a_idx_offset <= allocation_snapshots.length-1) && (allocation_snapshots[ a_idx + a_idx_offset ].createdAt <= m.ts) ) a_idx_offset++
+        a_idx += Math.max((a_idx_offset-1), 0)
+
+        //  Get a new allocation snapshot
+        let a = allocation_snapshots[ a_idx ]
+
+        //  Compute a new portfolio snapshot using the
+        Meteor.call('compute_portfolio_snapshot', a, m, userId)
+
+        //  Get the next market snapshot
+        m_idx++
+      }
     }
+
+    SyncStatus.update({
+      userId: userId
+    }, {
+      $set: {
+        last_synced: new Date()
+      }
+    }, {
+      upsert: true
+    })
+  },
+
+  'process_all_user_portfolios'() {
+    //  Get all un-processed MarketSnapshots
+    let market_snapshot_ids = MarketSnapshots.find({
+      processed: false
+    }, {
+      fields: {
+        _id: 1
+      }
+    }).fetch()
+    market_snapshot_ids = market_snapshot_ids.map(m => m._id)
+
+    //  For all users, process the data in these market snapshots
+    let user_ids = Meteor.users.find({}, {
+      fields: {
+        _id: 1
+      }
+    })
+    user_ids = user_ids.map(u => u._id)
+    _.each(user_ids, (userId) => {
+      Meteor.call('process_portfolios', market_snapshot_ids, userId)
+    })
 
     //  Mark un-processed MarketSnapshots as processed
     MarketSnapshots.update({
@@ -142,26 +167,18 @@ Meteor.methods({
     }, {
       multi: true
     })
-
-    SyncStatus.update({
-      _id: 'status'
-    }, {
-      $set: {
-        last_synced: new Date()
-      }
-    }, {
-      upsert: true
-    })
   },
 
-  'compute_portfolio_snapshot'(a, m) {
+  'compute_portfolio_snapshot'(a, m, userId) {
     let portfolio_snapshot = {
+      userId: userId,
       ts: m.createdAt,
       invested: a.invested,
       coins: {}
     }
 
     let portfolio_snapshot_q = {
+      userId: userId,
       ts: m.ts,
       granularity: m.granularity
     }
@@ -192,7 +209,7 @@ Meteor.methods({
     portfolio_snapshot_modifier.$set.return = return_value
     portfolio_snapshot_modifier.$set.performance = return_value / a.invested * 100
     //portfolio_snapshot_modifier.$set.last_synced = new Date()
-
+    console.log(portfolio_snapshot_q)
     PortfolioSnapshots.update( portfolio_snapshot_q, portfolio_snapshot_modifier, {upsert: true} )
   },
 
@@ -319,7 +336,6 @@ Meteor.methods({
       ]
 
       let market_snapshots = CoinmarketcapSnapshots.aggregate( pipeline )
-      // console.log(JSON.stringify(market_snapshots, null, 2))
 
       //  Update MarketSnapshots based on this data
       _.each(market_snapshots, (m) => {
@@ -358,19 +374,20 @@ Meteor.methods({
     }, {
       multi: true
     })
-  }
-})
+  },
 
-/*
-SyncStatus.update({
-  _id: 'status'
-}, {
-  $set: {
-    state: state,
-    errorMsg: newErrorMsg,
-    last_synced: new Date()
+  'update_funds'(invested) {
+    let funds_q = {
+      userId: Meteor.userId()
+    }
+    let funds_update = {
+      $set: {
+        invested: parseFloat(invested || 0)
+      }
+    }
+    Funds.update(funds_q, funds_update, {'upsert': true})
+
+    //  Create a new allocation snapshot
+    Meteor.call('update_allocation_snapshot')
   }
-}, {
-  upsert: true
 })
-*/

@@ -4,13 +4,11 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import './main.html';
 
 Template.body.onCreated( function() {
-  const tmpl = this
-  tmpl.subscribe("Funds")
-  tmpl.subscribe("Holdings")
-  tmpl.subscribe("SyncStatus")
+
 })
 
 Template.body.events({
+
 })
 
 Template.registerHelper('portfolio', () => {
@@ -38,10 +36,19 @@ Template.registerHelper('formatFixed', (m) => {
   return m.toFixed(2)
 })
 Template.registerHelper('invested', () => {
-  if( Funds.findOne({_id: "invested"}) ) return Funds.findOne({_id: "invested"}).value
+  if( Funds.findOne() ) return Funds.findOne().invested
   return "0"
 })
-Template.registerHelper('coinValue', (coin) => {
+Template.registerHelper('performancePercent', () => {
+  let portfolio = PortfolioSnapshots.findOne({}, {
+    sort: {
+      ts: -1
+    }
+  })
+  if( !portfolio || isNaN(portfolio.performance) || portfolio.performance === Infinity ) return '---'
+  return portfolio.performance.toFixed(2)
+})
+  Template.registerHelper('coinValue', (coin) => {
   let portfolio = PortfolioSnapshots.findOne({}, {
     sort: {
       ts: -1

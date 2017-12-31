@@ -48,12 +48,14 @@ const get_market_snapshot = () => {
 }
 
 Meteor.startup(() => {
+  /*  TODO: by user
   if( !Funds.findOne({_id: 'invested'}) ) {
     Funds.insert({
       _id: "invested",
       value: 0
     })
   }
+  */
 
   //  Get and store market data every 1 minute
   get_market_snapshot()
@@ -65,6 +67,6 @@ Meteor.startup(() => {
   }, 3000)
 
   Meteor.setInterval( () => {
-    Meteor.call('process_portfolios')
+    Meteor.call('process_all_user_portfolios')
   }, 3000)
 });

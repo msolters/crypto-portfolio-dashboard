@@ -3,7 +3,18 @@
 </head>
 
 <body>
+  {{#if currentUser }}
+    {{> userConsole}}
+  {{else}}
+    <center>
+      {{> loginButtons }}
+    </center>
+  {{/if}}
+</body>
+
+<template name="userConsole">
   <div class="console-grid">
+    {{> user}}
     {{> granularity}}
     {{> displayPerformance}}
     {{> displayHistory}}
@@ -27,7 +38,20 @@
   </p>
   {{/if}}
   {{> displayHoldings}}
-</body>
+</template>
+
+<template name="user">
+  <div class="card-box asset-box user-info">
+    <div>
+      {{currentUser.emails.[0].address}}
+    </div>
+  </div>
+  <div class="card-box asset-box logout">
+    <button data-logout type="button" class="logout-button" onclick="Meteor.logout()">
+      Logout
+    </button>
+  </div>
+</template>
 
 <template name="granularity">
   <div class="card-box asset-box granularity minute">
@@ -54,7 +78,7 @@
         Performance
       </div>
       <div class="card-box-content">
-        {{formatFixed portfolio.performance}}%
+        {{performancePercent}}%
       </div>
     </span>
   </div>

@@ -40,6 +40,7 @@ button:hover {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-areas:
+    "user-info"
     "total"
     "invested"
     "return"
@@ -49,7 +50,8 @@ button:hover {
     "granularity-day"
     "performance-chart"
     "allocation"
-    "history";
+    "history"
+    "logout";
   grid-gap: 10px;
   grid-row-gap: 20px;
   justify-content: stretch;
@@ -113,7 +115,11 @@ button:hover {
   min-height: 300px;
   padding-right: 20px;
 }
-.granularity {
+.user-info {
+  grid-area: user-info;
+}
+.logout {
+  grid-area: logout;
 }
 .granularity.minute {
   margin-top: 0.5em;
@@ -164,7 +170,9 @@ input[data-edit-invested] {
       "total invested return"
       "history history performance"
       "history history performance-chart"
-      "history history allocation";
+      "history history allocation"
+      ". user-info logout";
+    justify-content: justify;
   }
   .granularity.minute,
   .granularity.day {
@@ -175,6 +183,10 @@ input[data-edit-invested] {
 .last-synced {
   font-family: 'Fira Code Light';
   color: #aaa;
+}
+
+.grid {
+  display: grid;
 }
 
 .card-box-inner {
@@ -214,6 +226,11 @@ button[data-add-coin] {
   font-size: 1.3em;
   height: 100%;
   width: 100%;
+}
+button[data-logout] {
+  width: 100%;
+  height: 100%;
+  background-color: #962323;
 }
 button[data-add-coin]:hover {
   background-color: #228B22;

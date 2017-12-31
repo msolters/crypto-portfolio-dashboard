@@ -48,6 +48,7 @@ Template.displayAllocation.onRendered( function() {
 
       let chart = $("#coin-allocation-chart").highcharts()
       let serie_data = []
+      if( !portfolio.coins ) return
       for( let [coin, coin_data] of Object.entries(portfolio.coins) ) {
         serie_data.push({
           name: coin_data.symbol,

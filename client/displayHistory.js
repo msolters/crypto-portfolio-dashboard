@@ -128,6 +128,7 @@ Template.displayHistory.onRendered( function() {
       let tzOffset = now.getTimezoneOffset() * 60000
       let series_data = {}
       for( let s of snapshots.reverse() ) {
+        if( !s.coins ) continue
         for( let [coin, c] of Object.entries(s.coins) ) {
           let new_point = [s.ts.valueOf()-tzOffset, c.coin_value]
           if( !series_data[coin] ) {
