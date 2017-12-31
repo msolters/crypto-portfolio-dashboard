@@ -26,7 +26,7 @@ Meteor.publish( "PortfolioSnapshots", function(granularity, now) {
     userId: this.userId
   }
   return PortfolioSnapshots.find(portfolio_snapshot_q, {
-    $sort: {
+    sort: {
       ts: -1
     }
   })

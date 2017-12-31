@@ -40,7 +40,7 @@ Template.displayAllocation.onRendered( function() {
 
     self.autorun( () => {
       let portfolio = PortfolioSnapshots.findOne({}, {
-        $sort: {
+        sort: {
           ts: -1
         }
       })
