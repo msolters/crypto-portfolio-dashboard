@@ -23,7 +23,7 @@
     {{> performanceChart}}
   </div>
   <p>
-    <center>
+    <center class="sync-message">
       {{#if syncStatus.last_synced}}
         {{humanDuration syncStatus.last_synced}} ago
         <span class="last-synced"> - {{syncStatus.last_synced}}</span>
@@ -41,7 +41,7 @@
 </template>
 
 <template name="user">
-  <div class="card-box asset-box user-info">
+  <div class="card-box user-info">
     <div>
       {{currentUser.emails.[0].address}}
     </div>
