@@ -48,7 +48,9 @@ Template.displayHoldings.events({
     //  Create a new allocation snapshot
     Meteor.call('update_allocation_snapshot')
   },
+})
 
+Template.coin.events({
   'input input[data-edit-holding-symbol]'(event, tmpl) {
     update_holding_symbol(this, tmpl)
   },

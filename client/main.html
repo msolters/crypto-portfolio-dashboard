@@ -138,25 +138,7 @@
     </div>
     {{#if holdings}}
       {{#each holdings }}
-        <div class="card-box asset-box">
-          <button data-delete-coin type="button">Delete</button>
-          <div class="card-box-inner">
-            <div class="card-box-title">
-              <input data-edit-holding-symbol type="text" value="{{symbol}}" placeholder="Coin ID"/>
-            </div>
-            <div class="card-box-small-content">
-              <input data-edit-holding-quantity type="text" value="{{quantity}}" placeholder="Coin Quantity"/>
-            </div>
-            <div class="card-box-small-content">
-              <span class="asset-cash-value">
-                {{coinValue symbol}}
-              </span>
-              <span class="asset-cash-price">
-                ({{coinPrice symbol}})
-              </span>
-            </div>
-          </div>
-        </div>
+        {{> coin }}
       {{/each}}
     {{else}}
       <div class="card-box asset-box">
@@ -172,5 +154,27 @@
         </span>
       </div>
     {{/if}}
+  </div>
+</template>
+
+<template name="coin">
+  <div class="card-box asset-box">
+    <button data-delete-coin type="button">Delete</button>
+    <div class="card-box-inner">
+      <div class="card-box-title">
+        <input data-edit-holding-symbol type="text" value="{{symbol}}" placeholder="Coin ID"/>
+      </div>
+      <div class="card-box-small-content">
+        <input data-edit-holding-quantity type="text" value="{{quantity}}" placeholder="Coin Quantity"/>
+      </div>
+      <div class="card-box-small-content">
+        <span class="asset-cash-value">
+          {{coinValue symbol}}
+        </span>
+        <span class="asset-cash-price">
+          ({{coinPrice symbol}})
+        </span>
+      </div>
+    </div>
   </div>
 </template>
