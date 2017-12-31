@@ -132,13 +132,15 @@ button:hover {
   font-size: 1.3em;
   border: 2px solid #3c3a3a;
   outline: none;
-  color: #fff;
+  color: #aaa;
+  font-family: 'Fira Code Light';
   background-color: transparent;
 }
 .granularity-button.selected {
   border: 2px solid #3c3a3a;
   background-color: #2c2a2a;
   font-family: 'Fira Code Bold';
+  color: #fff;
 }
 input[data-edit-invested] {
   background-color: transparent;
@@ -207,10 +209,14 @@ input[data-edit-invested] {
   cursor: pointer;
 }
 button[data-add-coin] {
-  background-color: #228B22;
+  border: 2px solid #228B22;
+  background-color: #2c2a2a;
   font-size: 1.3em;
   height: 100%;
   width: 100%;
+}
+button[data-add-coin]:hover {
+  background-color: #228B22;
 }
 button[data-delete-coin] {
   border: 2px solid #962323;
@@ -224,6 +230,9 @@ button[data-delete-coin] {
 }
 button[data-delete-coin]:hover {
   background-color: #962323;
+}
+.error-msg {
+  color: #962323;
 }
 input[data-edit-holding-symbol] {
   font-size: 1.5em;

@@ -13,12 +13,19 @@
   </div>
   <p>
     <center>
-      {{#if portfolio.last_synced}}
-        {{humanDuration portfolio.last_synced}} ago
-        <span class="last-synced"> - {{portfolio.last_synced}}</span>
+      {{#if syncStatus.last_synced}}
+        {{humanDuration syncStatus.last_synced}} ago
+        <span class="last-synced"> - {{syncStatus.last_synced}}</span>
       {{/if}}
     </center>
   </p>
+  {{#if syncStatus.errorMsg}}
+  <p>
+    <center>
+      <span class="error-msg">{{syncStatus.errorMsg}}</span>
+    </center>
+  </p>
+  {{/if}}
   {{> displayHoldings}}
 </body>
 

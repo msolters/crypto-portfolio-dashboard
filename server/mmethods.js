@@ -13,6 +13,32 @@ Meteor.methods({
       allocation_snapshot.coins[h.symbol] = h.quantity
     })
     AllocationSnapshots.insert(allocation_snapshot)
+
+    let market_snapshot = MarketSnapshots.findOne({}, {
+      sort: {
+        createdAt: -1
+      }
+    })
+    if( !market_snapshot ) return
+    let invalid_coins = []
+    _.each(allocation_snapshot.coins, (quantity, coin) => {
+      console.log(coin)
+      let coin_data = _.findWhere(market_snapshot.coins, {
+        id: coin
+      })
+      if( !coin_data ) invalid_coins.push(coin)
+    })
+    let newErrorMsg = (invalid_coins.length) ? `Invalid Coinmarketcap IDs: ${invalid_coins}` : null
+    SyncStatus.update({
+      _id: 'status'
+    }, {
+      $set: {
+        errorMsg: newErrorMsg,
+        last_synced: new Date()
+      }
+    }, {
+      upsert: true
+    })
   },
 
   'process_portfolios'() {
@@ -78,28 +104,32 @@ Meteor.methods({
 
       let a_idx = 0
       let m_idx = 0
-      while( m_idx < market_snapshots.length && a_idx < allocation_snapshots.length ) {
-        //  Skip market data we don't have allocations for
-        while( market_snapshots[m_idx].ts < allocation_snapshots[a_idx].createdAt ) m_idx++
-        if( m_idx === market_snapshots.length ) break
+      loop1:
+        while( m_idx < market_snapshots.length && a_idx < allocation_snapshots.length ) {
+          //  Skip market data we don't have allocations for
+          loop2:
+            while( market_snapshots[m_idx].ts < allocation_snapshots[a_idx].createdAt ) {
+              m_idx++
+              if( m_idx >= market_snapshots.length ) break loop1
+            }
 
-        //  Get a new market snapshot
-        let m = market_snapshots[ m_idx ]
+          //  Get a new market snapshot
+          let m = market_snapshots[ m_idx ]
 
-        //  Ensure we're using the latest possible allocation snapshot
-        let a_idx_offset = 0
-        while( (a_idx+a_idx_offset <= allocation_snapshots.length-1) && (allocation_snapshots[ a_idx + a_idx_offset ].createdAt <= m.ts) ) a_idx_offset++
-        a_idx += Math.max((a_idx_offset-1), 0)
+          //  Ensure we're using the latest possible allocation snapshot
+          let a_idx_offset = 0
+          while( (a_idx+a_idx_offset <= allocation_snapshots.length-1) && (allocation_snapshots[ a_idx + a_idx_offset ].createdAt <= m.ts) ) a_idx_offset++
+          a_idx += Math.max((a_idx_offset-1), 0)
 
-        //  Get a new allocation snapshot
-        let a = allocation_snapshots[ a_idx ]
+          //  Get a new allocation snapshot
+          let a = allocation_snapshots[ a_idx ]
 
-        //  Compute a new portfolio snapshot using the
-        Meteor.call('compute_portfolio_snapshot', a, m)
+          //  Compute a new portfolio snapshot using the
+          Meteor.call('compute_portfolio_snapshot', a, m)
 
-        //  Get the next market snapshot
-        m_idx++
-      }
+          //  Get the next market snapshot
+          m_idx++
+        }
     }
 
     //  Mark un-processed MarketSnapshots as processed
@@ -134,10 +164,16 @@ Meteor.methods({
     }
 
     let total_portfolio_value = 0
+    let invalid_coins = []
     _.each(a.coins, (quantity, coin) => {
       let coin_data = _.findWhere(m.coins, {
         id: coin
       })
+      if( !coin_data ) {
+        //  This coin is not valid!
+        invalid_coins.push(coin)
+        return
+      }
       coin_data.coin_value = coin_data.price_usd * quantity / coin_data.samples
       total_portfolio_value += coin_data.coin_value
       portfolio_snapshot_modifier.$set[`coins.${coin}`] = coin_data
@@ -147,7 +183,7 @@ Meteor.methods({
     portfolio_snapshot_modifier.$set.total = total_portfolio_value
     portfolio_snapshot_modifier.$set.return = return_value
     portfolio_snapshot_modifier.$set.performance = return_value / a.invested * 100
-    portfolio_snapshot_modifier.$set.last_synced = new Date()
+    //portfolio_snapshot_modifier.$set.last_synced = new Date()
 
     PortfolioSnapshots.update( portfolio_snapshot_q, portfolio_snapshot_modifier, {upsert: true} )
   },
@@ -204,13 +240,13 @@ Meteor.methods({
 
     const ts_date_constructors = {
       'minute'(ts) {
-        return new Date(Date.UTC(ts.year, ts.month, ts.day, ts.hour, ts.minute))
+        return new Date(Date.UTC(ts.year, ts.month-1, ts.day, ts.hour, ts.minute))
       },
       'hour'(ts) {
-        return new Date(Date.UTC(ts.year, ts.month, ts.day, ts.hour))
+        return new Date(Date.UTC(ts.year, ts.month-1, ts.day, ts.hour))
       },
       'day'(ts) {
-        return new Date(Date.UTC(ts.year, ts.month, ts.day))
+        return new Date(Date.UTC(ts.year, ts.month-1, ts.day))
       }
     }
 
@@ -316,3 +352,17 @@ Meteor.methods({
     })
   }
 })
+
+/*
+SyncStatus.update({
+  _id: 'status'
+}, {
+  $set: {
+    state: state,
+    errorMsg: newErrorMsg,
+    last_synced: new Date()
+  }
+}, {
+  upsert: true
+})
+*/

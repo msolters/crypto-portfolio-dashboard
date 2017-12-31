@@ -2,17 +2,17 @@ Meteor.publish( "PortfolioSnapshots", (granularity, now) => {
   const aggregate_q = {
     'minute': {
       't0'() {
-        return moment(now).subtract(1, 'hour').utc().toDate()
+        return moment(now).subtract(1, 'hour').toDate()
       }
     },
     'hour': {
       't0'() {
-        return moment(now).subtract(1, 'day').utc().toDate()
+        return moment(now).subtract(1, 'day').toDate()
       }
     },
     'day': {
       't0'() {
-        return moment(now).subtract(1, 'month').utc().toDate()
+        return moment(now).subtract(1, 'month').toDate()
       }
     }
   }
@@ -29,6 +29,9 @@ Meteor.publish( "PortfolioSnapshots", (granularity, now) => {
       ts: -1
     }
   })
+})
+Meteor.publish( "SyncStatus", () => {
+  return SyncStatus.find()
 })
 Meteor.publish( "Holdings", () => {
   return Holdings.find()

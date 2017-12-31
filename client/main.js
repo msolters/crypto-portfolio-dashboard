@@ -7,6 +7,7 @@ Template.body.onCreated( function() {
   const tmpl = this
   tmpl.subscribe("Funds")
   tmpl.subscribe("Holdings")
+  tmpl.subscribe("SyncStatus")
 })
 
 Template.body.events({
@@ -20,6 +21,10 @@ Template.registerHelper('portfolio', () => {
     limit: 1
   })
 })
+Template.registerHelper('syncStatus', () => {
+  return SyncStatus.findOne()
+})
+
 Template.registerHelper('formatMoney', (m) => {
   return accounting.formatMoney(m)
 })

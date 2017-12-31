@@ -14,6 +14,9 @@ const update_holding_symbol = _.debounce( (holding, event) => {
     }
   }
   Holdings.update(holding_q, holding_update)
+
+  //  Create a new allocation snapshot
+  Meteor.call('update_allocation_snapshot')
 }, 1000 )
 
 const update_holding_quantity = _.debounce( (holding, event) => {
@@ -40,6 +43,9 @@ Template.displayHoldings.events({
       quantity: 0
     }
     Holdings.insert(new_coin)
+
+    //  Create a new allocation snapshot
+    Meteor.call('update_allocation_snapshot')
   },
 
   'input input[data-edit-holding-symbol]'(event, tmpl) {
@@ -55,5 +61,8 @@ Template.displayHoldings.events({
       _id: this._id
     }
     Holdings.remove(holding_q)
+
+    //  Create a new allocation snapshot
+    Meteor.call('update_allocation_snapshot')
   },
 })
