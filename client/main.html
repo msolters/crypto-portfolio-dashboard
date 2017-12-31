@@ -3,7 +3,6 @@
 </head>
 
 <body>
-  {{> displayHoldings}}
   <div class="console-grid">
     {{> granularity}}
     {{> displayPerformance}}
@@ -12,6 +11,15 @@
     {{> displayAllocation}}
     {{> performanceChart}}
   </div>
+  <p>
+    <center>
+      {{#if portfolio.last_synced}}
+        {{humanDuration portfolio.last_synced}} ago
+        <span class="last-synced"> - {{portfolio.last_synced}}</span>
+      {{/if}}
+    </center>
+  </p>
+  {{> displayHoldings}}
 </body>
 
 <template name="granularity">
@@ -100,7 +108,7 @@
     {{#if holdings}}
       {{#each holdings }}
         <div class="card-box asset-box">
-          <button data-delete-coin type="button">Remove</button>
+          <button data-delete-coin type="button">Delete</button>
           <div class="card-box-inner">
             <div class="card-box-title">
               <input data-edit-holding-symbol type="text" value="{{symbol}}" placeholder="Coin ID"/>

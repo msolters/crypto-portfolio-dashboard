@@ -1,8 +1,12 @@
 Template.granularity.onCreated( function() {
   const tmpl = this
   tmpl.granularity = new ReactiveVar('minute')
-  this.autorun( function() {
-    tmpl.subscribe("PortfolioSnapshots", tmpl.granularity.get())
+  tmpl.timer = new ReactiveVar(new Date())
+  setInterval( () => {
+    tmpl.timer.set(new Date())
+  }, 1000)
+  tmpl.autorun( function() {
+    tmpl.subscribe("PortfolioSnapshots", tmpl.granularity.get(), tmpl.timer.get())
   })
 })
 

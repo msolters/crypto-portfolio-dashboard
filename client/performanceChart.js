@@ -7,7 +7,7 @@ Template.performanceChart.onRendered( function() {
   Meteor.setTimeout( function() {
     $('#performance-chart').highcharts({
       chart: {
-          type: 'line',
+          type: 'spline',
           backgroundColor: null,
           style: {
             color: "#ffffff"

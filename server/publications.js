@@ -1,22 +1,30 @@
-Meteor.publish( "PortfolioSnapshots", (granularity) => {
+Meteor.publish( "PortfolioSnapshots", (granularity, now) => {
   const aggregate_q = {
     'minute': {
-      t0: moment().startOf('hour').toDate()
+      't0'() {
+        return moment(now).subtract(1, 'hour').utc().toDate()
+      }
     },
     'hour': {
-      t0: moment().startOf('day').toDate()
+      't0'() {
+        return moment(now).subtract(1, 'day').utc().toDate()
+      }
     },
     'day': {
-      t0: moment().startOf('month').toDate()
+      't0'() {
+        return moment(now).subtract(1, 'month').utc().toDate()
+      }
     }
   }
 
-  return PortfolioSnapshots.find({
+  let t0 = aggregate_q[granularity].t0()
+  let portfolio_snapshot_q = {
     granularity: granularity,
     ts: {
-      $gte: aggregate_q[granularity].t0
+      $gte: t0
     }
-  }, {
+  }
+  return PortfolioSnapshots.find(portfolio_snapshot_q, {
     $sort: {
       ts: -1
     }

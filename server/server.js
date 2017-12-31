@@ -62,9 +62,9 @@ Meteor.startup(() => {
   //  Process market data into user-specific portfolio data
   Meteor.setInterval( () => {
     Meteor.call('process_market_snapshots')
-  }, 5000)
+  }, 3000)
 
   Meteor.setInterval( () => {
     Meteor.call('process_portfolios')
-  }, 5000)
+  }, 3000)
 });

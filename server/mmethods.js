@@ -147,6 +147,7 @@ Meteor.methods({
     portfolio_snapshot_modifier.$set.total = total_portfolio_value
     portfolio_snapshot_modifier.$set.return = return_value
     portfolio_snapshot_modifier.$set.performance = return_value / a.invested * 100
+    portfolio_snapshot_modifier.$set.last_synced = new Date()
 
     PortfolioSnapshots.update( portfolio_snapshot_q, portfolio_snapshot_modifier, {upsert: true} )
   },

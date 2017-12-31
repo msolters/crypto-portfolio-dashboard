@@ -16,11 +16,16 @@ Template.registerHelper('portfolio', () => {
   return PortfolioSnapshots.findOne({}, {
     sort: {
       ts: -1
-    }
+    },
+    limit: 1
   })
 })
 Template.registerHelper('formatMoney', (m) => {
   return accounting.formatMoney(m)
+})
+Template.registerHelper('humanDuration', (t0) => {
+  let diff = moment().diff(t0, 'seconds')
+  return moment.duration(diff, 'seconds').humanize()
 })
 Template.registerHelper('formatFixed', (m) => {
   if( !m ) return 0
