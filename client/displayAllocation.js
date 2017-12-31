@@ -15,7 +15,7 @@ Template.displayAllocation.onRendered( function() {
         }
       },
       title: {
-          text: 'Portfolio Allocation',
+          text: null,
           style: {
             color: '#fff'
           }
@@ -39,7 +39,11 @@ Template.displayAllocation.onRendered( function() {
     });
 
     self.autorun( () => {
-      let portfolio = Portfolio.findOne()
+      let portfolio = PortfolioSnapshots.findOne({}, {
+        $sort: {
+          ts: -1
+        }
+      })
       if( !portfolio ) return
 
       let chart = $("#coin-allocation-chart").highcharts()

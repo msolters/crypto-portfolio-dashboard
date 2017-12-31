@@ -1,7 +1,3 @@
-Template.displayHistory.onCreated( function() {
-  this.subscribe('LastDay')
-})
-
 Template.displayHistory.onRendered( function() {
   const self = this;
   Meteor.setTimeout( function() {
@@ -22,26 +18,14 @@ Template.displayHistory.onRendered( function() {
         verticalAlign: "middle"
       },
       title: {
-          text: 'Portfolio Performance',
-          style: {
-            color: '#fff'
-          }
-      },
-      subtitle: {
-          text: 'Last 24 Hours',
-          style: {
-            color: '#fff'
-          }
+        text: null,
+        style: {
+          color: '#fff'
+        }
       },
       xAxis: {
         type: 'datetime',
         crosshair: true,
-        title: {
-          text: 'Time',
-          style: {
-            color: '#fff'
-          }
-        },
         labels: {
           style: {
             color: "#fff"
@@ -76,7 +60,58 @@ Template.displayHistory.onRendered( function() {
           }
         }
       },
-      series: []
+      series: [],
+      responsive: {
+        rules: [{
+          condition: {
+            maxWidth: 1280
+          },
+          chartOptions: {
+            legend: {
+              itemStyle: {
+                fontSize: '20px'
+              }
+            },
+            title: {
+                style: {
+                  fontSize: '40px'
+                }
+            },
+            subtitle: {
+                style: {
+                  fontSize: '30px'
+                }
+            },
+            xAxis: {
+              title: {
+                style: {
+                  fontSize: '30px'
+                }
+              },
+              labels: {
+                style: {
+                  fontSize: '25px'
+                }
+              }
+            },
+            yAxis: {
+              title: {
+                style: {
+                  fontSize: '30px'
+                }
+              },
+              labels: {
+                style: {
+                  fontSize: '25px'
+                }
+              }
+            },
+            tooltip: {
+              fontSize: '30px',
+            },
+          }
+        }]
+      }
     });
 
     self.autorun( () => {
@@ -94,7 +129,7 @@ Template.displayHistory.onRendered( function() {
       let series_data = {}
       for( let s of snapshots.reverse() ) {
         for( let [coin, c] of Object.entries(s.coins) ) {
-          let new_point = [s.ts.valueOf()-tzOffset, c.value]
+          let new_point = [s.ts.valueOf()-tzOffset, c.coin_value]
           if( !series_data[coin] ) {
             series_data[coin] = [ new_point ]
           } else {

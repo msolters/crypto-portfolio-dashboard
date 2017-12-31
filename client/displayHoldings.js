@@ -17,6 +17,7 @@ const update_holding_symbol = _.debounce( (holding, event) => {
 }, 1000 )
 
 const update_holding_quantity = _.debounce( (holding, event) => {
+  //  Update Holding document
   let holding_q = {
     _id: holding._id
   }
@@ -26,6 +27,9 @@ const update_holding_quantity = _.debounce( (holding, event) => {
     }
   }
   Holdings.update(holding_q, holding_update)
+
+  //  Create a new allocation snapshot
+  Meteor.call('update_allocation_snapshot')
 }, 1000 )
 
 Template.displayHoldings.events({

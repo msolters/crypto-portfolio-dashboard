@@ -1,25 +1,38 @@
-Meteor.publish( "LastHour", function() {
-  return PortfolioSnapshots.find( {}, {
-    sort: {
-      ts: -1
+Meteor.publish( "PortfolioSnapshots", (granularity, now) => {
+  const aggregate_q = {
+    'minute': {
+      't0'() {
+        return moment(now).subtract(1, 'hour').utc().toDate()
+      }
     },
-    limit: 60
-  })
-} )
-Meteor.publish( "LastDay", function() {
-  return PortfolioSnapshots.find( {}, {
-    sort: {
-      ts: -1
+    'hour': {
+      't0'() {
+        return moment(now).subtract(1, 'day').utc().toDate()
+      }
     },
-    limit: 96
+    'day': {
+      't0'() {
+        return moment(now).subtract(1, 'month').utc().toDate()
+      }
+    }
+  }
+
+  let t0 = aggregate_q[granularity].t0()
+  let portfolio_snapshot_q = {
+    granularity: granularity,
+    ts: {
+      $gte: t0
+    }
+  }
+  return PortfolioSnapshots.find(portfolio_snapshot_q, {
+    $sort: {
+      ts: -1
+    }
   })
-} )
-Meteor.publish(  "Portfolio", () => {
-  return Portfolio.find()
 })
-Meteor.publish(  "Holdings", () => {
+Meteor.publish( "Holdings", () => {
   return Holdings.find()
 })
-Meteor.publish(  "Funds", () => {
+Meteor.publish( "Funds", () => {
   return Funds.find()
 })

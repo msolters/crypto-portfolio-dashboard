@@ -8,6 +8,9 @@ const update_invested = _.debounce( (event) => {
     }
   }
   Funds.update(funds_q, funds_update, {'upsert': true})
+
+  //  Create a new allocation snapshot
+  Meteor.call('update_allocation_snapshot')
 }, 1000 )
 
 Template.displayPerformance.events({

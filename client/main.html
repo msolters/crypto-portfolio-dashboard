@@ -3,16 +3,42 @@
 </head>
 
 <body>
-  <h2>Portfolio</h2>
   <div class="console-grid">
+    {{> granularity}}
     {{> displayPerformance}}
     {{> displayHistory}}
     {{> displayReturn}}
     {{> displayAllocation}}
     {{> performanceChart}}
   </div>
+  <p>
+    <center>
+      {{#if portfolio.last_synced}}
+        {{humanDuration portfolio.last_synced}} ago
+        <span class="last-synced"> - {{portfolio.last_synced}}</span>
+      {{/if}}
+    </center>
+  </p>
   {{> displayHoldings}}
 </body>
+
+<template name="granularity">
+  <div class="card-box asset-box granularity minute">
+    <button type="button" data-set-granularity-minute class="granularity-button {{#if granularityIs 'minute'}}selected{{/if}}">
+      60 Min
+    </button>
+  </div>
+  <div class="card-box asset-box granularity hour">
+    <button data-set-granularity-hour type="button" class="granularity-button {{#if granularityIs 'hour'}}selected{{/if}}">
+      24 Hrs
+    </button>
+  </div>
+  <div class="card-box asset-box granularity day">
+    <button data-set-granularity-day type="button" class="granularity-button {{#if granularityIs 'day'}}selected{{/if}}">
+      30 Days
+    </button>
+  </div>
+</template>
 
 <template name="displayReturn">
   <div id="return-performance-box" class="card-box performance">
@@ -73,12 +99,16 @@
 </template>
 
 <template name="displayHoldings">
-  <h2>Currencies</h2>
   <div id="asset-grid">
+    <div class="card-box asset-box">
+      <button type="button" data-add-coin>
+        Add Coin
+      </button>
+    </div>
     {{#if holdings}}
       {{#each holdings }}
         <div class="card-box asset-box">
-          <button data-delete-coin type="button">Remove</button>
+          <button data-delete-coin type="button">Delete</button>
           <div class="card-box-inner">
             <div class="card-box-title">
               <input data-edit-holding-symbol type="text" value="{{symbol}}" placeholder="Coin ID"/>
@@ -111,10 +141,5 @@
         </span>
       </div>
     {{/if}}
-    <div class="card-box asset-box">
-      <button type="button" data-add-coin>
-        Add Coin
-      </button>
-    </div>
   </div>
 </template>
