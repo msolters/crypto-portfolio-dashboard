@@ -22,6 +22,9 @@ body {
     "invested"
     "return"
     "performance"
+    "granularity-minute"
+    "granularity-hour"
+    "granularity-day"
     "performance-chart"
     "allocation"
     "history";
@@ -87,13 +90,38 @@ body {
   min-height: 300px;
   padding-right: 20px;
 }
+.granularity {
+}
+.granularity.minute {
+  grid-area: granularity-minute;
+}
+.granularity.hour {
+  grid-area: granularity-hour;
+}
+.granularity.day {
+  grid-area: granularity-day;
+}
+.granularity-button {
+  height: 100%;
+  width: 100%;
+  font-size: 1.3em;
+  border: 2px solid #3c3a3a;
+  outline: none;
+  color: #fff;
+  background-color: transparent;
+}
+.granularity-button.selected {
+  border: 2px solid #3c3a3a;
+  background-color: #2c2a2a;
+  font-weight: bold;
+}
 input[data-edit-invested] {
   background-color: transparent;
   border: none;
   outline: none;
   color: #fff;
   font-size: 1em;
-  width: 5em;
+  width: 4em;
   font-weight: bold;
 }
 
@@ -106,6 +134,7 @@ input[data-edit-invested] {
     grid-column-gap: 10px;
     grid-template-areas:
       "total invested return"
+      "granularity-minute granularity-hour granularity-day"
       "history history performance"
       "history history performance-chart"
       "history history allocation";
@@ -174,6 +203,9 @@ input[data-edit-holding-quantity] {
   }
   .card-box-inner {
     padding-left: 2em;
+  }
+  .granularity-button {
+    font-size: 1em;
   }
   input[data-edit-holding-symbol] {
     font-size: 1em;

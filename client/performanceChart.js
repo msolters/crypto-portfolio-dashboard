@@ -1,5 +1,5 @@
 Template.performanceChart.onCreated( function() {
-  this.subscribe('LastDay')
+  //this.subscribe('LastDay')
 })
 
 Template.performanceChart.onRendered( function() {

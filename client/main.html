@@ -5,6 +5,7 @@
 <body>
   <h2>Portfolio</h2>
   <div class="console-grid">
+    {{> granularity}}
     {{> displayPerformance}}
     {{> displayHistory}}
     {{> displayReturn}}
@@ -13,6 +14,24 @@
   </div>
   {{> displayHoldings}}
 </body>
+
+<template name="granularity">
+  <div class="card-box asset-box granularity minute">
+    <button type="button" data-set-granularity-minute class="granularity-button {{#if granularityIs 'minute'}}selected{{/if}}">
+      Last 60 Min
+    </button>
+  </div>
+  <div class="card-box asset-box granularity hour">
+    <button data-set-granularity-hour type="button" class="granularity-button {{#if granularityIs 'hour'}}selected{{/if}}">
+      Last 24 Hrs
+    </button>
+  </div>
+  <div class="card-box asset-box granularity day">
+    <button data-set-granularity-day type="button" class="granularity-button {{#if granularityIs 'day'}}selected{{/if}}">
+      Last 30 Days
+    </button>
+  </div>
+</template>
 
 <template name="displayReturn">
   <div id="return-performance-box" class="card-box performance">
