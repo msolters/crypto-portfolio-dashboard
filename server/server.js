@@ -48,6 +48,19 @@ const get_market_snapshot = () => {
 }
 
 Meteor.startup(() => {
+  //  Establish DB indices
+  PortfolioSnapshots._ensureIndex({
+    _id: 1,
+    userId: 1,
+    granularity: 1,
+    ts: 1
+  })
+  MarketSnapshots._ensureIndex({
+    _id: 1,
+    processed: 1,
+    createdAt: -1
+  })
+
   //  Get and store market data every 1 minute
   get_market_snapshot()
   Meteor.setInterval( get_market_snapshot, 5000 )
@@ -60,4 +73,8 @@ Meteor.startup(() => {
   Meteor.setInterval( () => {
     Meteor.call('process_all_user_portfolios')
   }, 3000)
+
+  Meteor.setInterval( () => {
+    Meteor.call('cleanup_documents')
+  }, 60000)
 });

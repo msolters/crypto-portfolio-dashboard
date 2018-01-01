@@ -19,11 +19,11 @@ Meteor.publish( "PortfolioSnapshots", function(granularity, now) {
 
   let t0 = aggregate_q[granularity].t0()
   let portfolio_snapshot_q = {
+    userId: this.userId,
     granularity: granularity,
     ts: {
       $gte: t0
     },
-    userId: this.userId
   }
   return PortfolioSnapshots.find(portfolio_snapshot_q, {
     sort: {

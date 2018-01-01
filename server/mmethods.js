@@ -387,5 +387,48 @@ Meteor.methods({
 
     //  Create a new allocation snapshot
     Meteor.call('update_allocation_snapshot')
+  },
+
+  'cleanup_documents'() {
+    //  Delete processed Coinmarketcap request responses
+    CoinmarketcapSnapshots.remove({
+      processed: true
+    })
+
+    //  Delete outdated MarketSnapshots
+    let market_snapshot = MarketSnapshots.findOne({}, {
+      sort: {
+        createdAt: -1
+      }
+    })
+    if( market_snapshot ) {
+      MarketSnapshots.remove({
+        processed: true,
+        createdAt: {
+          $lt: market_snapshot.createdAt
+        }
+      })
+    }
+
+    //  Delete outdated PortfolioSnapshots
+    const portfolio_snapshot_cleanup_q = {
+      'minute'() {
+        return moment().subtract(60, 'minutes').toDate()
+      },
+      'hour'() {
+        return moment().subtract(24, 'hours').toDate()
+      },
+      'day'() {
+        return moment().subtract(1, 'month').toDate()
+      }
+    }
+    for( let [granularity, t0] of Object.entries(portfolio_snapshot_cleanup_q) ) {
+      PortfolioSnapshots.remove({
+        granularity: granularity,
+        ts: {
+          $lt: t0()
+        }
+      })
+    }
   }
 })
