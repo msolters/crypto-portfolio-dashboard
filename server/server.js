@@ -60,6 +60,10 @@ Meteor.startup(() => {
     processed: 1,
     createdAt: -1
   })
+  Holdings._ensureIndex({
+    _id: 1,
+    userId: 1
+  })
 
   //  Get and store market data every 1 minute
   get_market_snapshot()
