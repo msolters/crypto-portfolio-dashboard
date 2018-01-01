@@ -121,7 +121,7 @@ Template.displayHistory.onRendered( function() {
       let snapshots_q = {}
       let snapshots = PortfolioSnapshots.find(snapshots_q, {sort: {
         ts: -1
-      }, limit: 96}).fetch()
+      }}).fetch()
 
       // Generate new series data
       let now = new Date()

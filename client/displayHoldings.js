@@ -36,14 +36,19 @@ const update_holding_quantity = _.debounce( (holding, tmpl) => {
 }, 1000 )
 
 Template.displayHoldings.events({
-  'click button[data-add-coin]'() {
+  'click button[data-add-coin]'(event, tmpl) {
     let num_coins = Holdings.find().count()
     let new_coin = {
+      userId: Meteor.userId(),
       symbol: `New Coin ${num_coins+1}`,
       quantity: 0,
-      userId: Meteor.userId()
     }
-    Holdings.insert(new_coin)
+    let holding_id = Holdings.insert(new_coin)
+
+    //  Focus the new coin box's text input
+    let new_coin_input = tmpl.find(`input#coin-symbol-input-${holding_id}`)
+    new_coin_input.focus()
+    new_coin_input.select()
 
     //  Create a new allocation snapshot
     Meteor.call('update_allocation_snapshot')
