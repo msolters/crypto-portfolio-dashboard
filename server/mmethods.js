@@ -401,7 +401,7 @@ Meteor.methods({
       MarketSnapshots.remove({
         processed: true,
         ts: {
-          $lt: market_snapshot.createdAt
+          $lt: market_snapshot.ts
         }
       })
     }
