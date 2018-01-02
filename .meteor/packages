@@ -28,3 +28,6 @@ accounts-ui@1.2.0
 accounts-password@1.5.0
 dynamic-import
 accounts-base
+kadira:flow-router
+kadira:blaze-layout
+useraccounts:unstyled

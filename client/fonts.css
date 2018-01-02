@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'Fira Code';
+  src: url('font/FiraCode-Retina.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Fira Code Light';
+  src: url('font/FiraCode-Light.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Fira Code Bold';
+  src: url('font/FiraCode-Bold.otf') format('opentype');
+}

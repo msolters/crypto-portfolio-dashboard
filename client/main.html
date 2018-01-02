@@ -3,14 +3,30 @@
 </head>
 
 <body>
-  {{#if currentUser }}
-    {{> userConsole}}
-  {{else}}
-    <center>
-      {{> loginButtons }}
-    </center>
-  {{/if}}
+  {{> Template.dynamic template=main}}
 </body>
+
+<template name="dashboard">
+  {{#if currentUser }}
+    <div class="dashboard">
+      {{> userConsole}}
+    </div>
+  {{else}}
+    <div class="page-container">
+      {{> turnkey state="signIn"}}
+    </div>
+  {{/if}}
+</template>
+
+<template name="turnkey">
+  <div class="grid">
+    <div class="card-box">
+      <div class="card-box-small-content">
+        {{> atForm state=state}}
+      </div>
+    </div>
+  </div>
+</template>
 
 <template name="userConsole">
   <div class="console-grid">

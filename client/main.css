@@ -1,40 +1,59 @@
-@font-face {
+* {
   font-family: 'Fira Code';
-  src: url('FiraCode-Retina.otf') format('opentype');
 }
-@font-face {
-  font-family: 'Fira Code Light';
-  src: url('FiraCode-Light.otf') format('opentype');
-}
-@font-face {
-  font-family: 'Fira Code Bold';
-  src: url('FiraCode-Bold.otf') format('opentype');
-}
-/* CSS declarations go here */
-
 html,
 body {
   width: 100%;
   max-width: 100%;
-  zoom: 1;
+  zoom: initial !important;
   margin: 0;
-  font-family: 'Fira Code';
-}
-* {
-  font-family: 'Fira Code';
 }
 body {
   background-color: #2c2a2a;
   color: #fff;
+  /* font-size: 200%; */
+}
+.dashboard {
   padding: 10px;
   width: calc(100% - 20px);
-  font-size: 200%;
 }
 button {
   opacity: 0.9;
 }
 button:hover {
   opacity: 1;
+}
+ul {
+  list-style-type: none;
+}
+.at-form {
+  zoom: 150%;
+}
+.at-form label {
+  display: none;
+}
+.at-form input {
+  zoom: 200%;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: #fff;
+  width: 100%;
+}
+.at-form input:focus {
+  background-color: #2d2b2b;
+}
+.at-form button {
+  margin-top: 15px;
+  font-size: 1em;
+  padding: 0.5em 2em;
+  border: none;
+  background-color: #228B22;
+  color: #fff;
+  width: 100%;
+}
+.grid {
+  display: grid;
 }
 .console-grid {
   display: grid;
@@ -73,11 +92,17 @@ button:hover {
 .card-box > * {
   margin: auto;
 }
+.card-box.transparent {
+  background-color: transparent;
+}
 .card-box-small-content {
   width: 80%;
 }
 .card-box-small-content > span {
   padding-left: 5px;
+}
+.card-box-small-content.wide {
+  width: 100%;
 }
 .card-box-title {
   color: #aaa;
@@ -174,6 +199,9 @@ input[data-edit-invested] {
       "history history performance-chart"
       "history history allocation"
       ". user-info logout";
+  }
+  .at-form {
+    zoom: 100%;
   }
   .granularity.minute,
   .granularity.day {
