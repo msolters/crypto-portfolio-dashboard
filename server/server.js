@@ -66,17 +66,24 @@ Meteor.startup(() => {
   })
 
   //  Get and store market data every 1 minute
-  get_market_snapshot()
-  Meteor.setInterval( get_market_snapshot, 5000 )
+  const get_market_snapshots = Meteor.bindEnvironment( () => {
+    get_market_snapshot()
+    setTimeout( get_market_snapshots, 5000 )
+  })
+  get_market_snapshots()
 
   //  Process market data into user-specific portfolio data
-  Meteor.setInterval( () => {
+  const process_market_snapshots = Meteor.bindEnvironment( () => {
     Meteor.call('process_market_snapshots')
-  }, 3000)
+    setTimeout( process_market_snapshots, 3000 )
+  })
+  process_market_snapshots()
 
-  Meteor.setInterval( () => {
+  const process_all_portfolios = Meteor.bindEnvironment( () => {
     Meteor.call('process_all_user_portfolios')
-  }, 3000)
+    setTimeout( process_all_portfolios, 3000 )
+  })
+  process_all_portfolios()
 
   Meteor.setInterval( () => {
     Meteor.call('cleanup_documents')
