@@ -184,6 +184,7 @@ input[data-edit-invested] {
   border: none;
   outline: none;
   color: #fff;
+  border-bottom: 1px solid #fff;
   font-size: 1em;
   width: 5em;
   font-weight: bold;
