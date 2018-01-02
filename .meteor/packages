@@ -31,3 +31,4 @@ accounts-base
 kadira:flow-router
 kadira:blaze-layout
 useraccounts:unstyled
+msolters:reactive-select

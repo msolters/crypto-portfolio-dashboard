@@ -57,14 +57,6 @@
     </div>
   </div>
 
-  {{#if syncStatus.errorMsg}}
-  <p>
-    <center>
-      <span class="error-msg">{{syncStatus.errorMsg}}</span>
-    </center>
-  </p>
-  {{/if}}
-
   {{> displayHoldings}}
 
 </template>
@@ -191,10 +183,10 @@
     <button data-delete-coin type="button">Delete</button>
     <div class="card-box-inner">
       <div class="card-box-title">
-        <input data-edit-holding-symbol type="text" value="{{symbol}}" placeholder="Coin ID" id="coin-symbol-input-{{_id}}"/>
+        {{> select include_blank=false options=available_coins id=_id choice=current_choice }}
       </div>
       <div class="card-box-small-content">
-        <input data-edit-holding-quantity type="text" value="{{#if quantity}}{{quantity}}{{/if}}" placeholder="Coin Quantity"/>
+        <input data-edit-holding-quantity type="text" value="{{#if quantity}}{{quantity}}{{/if}}" placeholder="Quantity Owned"/>
       </div>
       <div class="card-box-small-content">
         <span class="asset-cash-value">

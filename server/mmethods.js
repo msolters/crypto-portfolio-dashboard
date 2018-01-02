@@ -24,17 +24,13 @@ Meteor.methods({
       }
     })
     if( !market_snapshot ) return
-    let invalid_coins = []
     _.each(allocation_snapshot.coins, (quantity, coin) => {
       let coin_data = _.findWhere(market_snapshot.coins, {
         id: coin
       })
-      if( !coin_data ) invalid_coins.push(coin)
     })
-    let newErrorMsg = (invalid_coins.length) ? `Invalid Coinmarketcap IDs: ${invalid_coins}` : null
     SyncStatus.update(user_q, {
       $set: {
-        errorMsg: newErrorMsg,
         last_synced: new Date()
       }
     }, {

@@ -81,6 +81,18 @@ ul {
   justify-content: stretch;
   align-items: stretch;
 }
+select {
+  background-color: #3c3a3a;
+  border: none;
+  outline: none;
+  color: #fff;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
+  font-size: 1.4em;
+  padding: 5px !important;
+}
+option {
+  font-size: 0.5em;
+}
 .console-grid > div {
   overflow: hidden;
   border-radius: 5px;
@@ -208,6 +220,9 @@ input[data-edit-invested] {
   }
   .at-form {
     zoom: 100%;
+  }
+  option {
+    font-size: 1em;
   }
   .granularity.minute,
   .granularity.day {
