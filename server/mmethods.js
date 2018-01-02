@@ -394,13 +394,13 @@ Meteor.methods({
     //  Delete outdated MarketSnapshots
     let market_snapshot = MarketSnapshots.findOne({}, {
       sort: {
-        createdAt: -1
+        ts: -1
       }
     })
     if( market_snapshot ) {
       MarketSnapshots.remove({
         processed: true,
-        createdAt: {
+        ts: {
           $lt: market_snapshot.createdAt
         }
       })
