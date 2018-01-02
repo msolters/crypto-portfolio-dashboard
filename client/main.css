@@ -16,7 +16,7 @@ body {
   padding: 10px;
   width: calc(100% - 20px);
 }
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 1000px) {
   .dashboard {
     font-size: 175%;
   }
@@ -204,7 +204,7 @@ input[data-edit-invested] {
   font-weight: bold;
 }
 
-@media screen and (min-width: 1280px) {
+@media screen and (min-width: 1000px) {
   body {
     font-size: 100%;
   }
