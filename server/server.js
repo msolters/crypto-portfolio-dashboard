@@ -58,6 +58,7 @@ Meteor.startup(() => {
   MarketSnapshots._ensureIndex({
     _id: 1,
     processed: 1,
+    granularity: 1,
     ts: -1
   })
   Holdings._ensureIndex({

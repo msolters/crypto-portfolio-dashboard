@@ -386,26 +386,6 @@ Meteor.methods({
   },
 
   'cleanup_documents'() {
-    //  Delete processed Coinmarketcap request responses
-    CoinmarketcapSnapshots.remove({
-      processed: true
-    })
-
-    //  Delete outdated MarketSnapshots
-    let market_snapshot = MarketSnapshots.findOne({}, {
-      sort: {
-        ts: -1
-      }
-    })
-    if( market_snapshot ) {
-      MarketSnapshots.remove({
-        processed: true,
-        ts: {
-          $lt: market_snapshot.ts
-        }
-      })
-    }
-
     //  Delete outdated PortfolioSnapshots
     const portfolio_snapshot_cleanup_q = {
       'minute'() {
@@ -418,6 +398,32 @@ Meteor.methods({
         return moment().subtract(1, 'month').toDate()
       }
     }
+
+    //  Delete processed Coinmarketcap request responses
+    CoinmarketcapSnapshots.remove({
+      processed: true
+    })
+
+    //  Delete outdated MarketSnapshots
+    for( let [granularity, t0] of Object.entries(portfolio_snapshot_cleanup_q) ) {
+      let market_snapshot = MarketSnapshots.findOne({
+        granularity: granularity,
+      }, {
+        sort: {
+          ts: -1
+        }
+      })
+      if( market_snapshot ) {
+        MarketSnapshots.remove({
+          processed: true,
+          granularity: granularity,
+          ts: {
+            $lt: market_snapshot.ts
+          }
+        })
+      }
+    }
+
     for( let [granularity, t0] of Object.entries(portfolio_snapshot_cleanup_q) ) {
       PortfolioSnapshots.remove({
         granularity: granularity,
