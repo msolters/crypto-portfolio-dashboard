@@ -3,6 +3,7 @@ AccountsTemplates.configure({
     if (!error) {
       if (state === "signIn") {
         // Successfully logged in
+        FlowRouter.go('/dashboard')
       }
       if (state === "signUp") {
         // Successfully registered
