@@ -9,5 +9,6 @@ AccountsTemplates.configure({
         FlowRouter.go('/dashboard')
       }
     }
-  }
+  },
+  focusFirstInput: false
 })
