@@ -37,15 +37,26 @@
     {{> displayReturn}}
     {{> displayAllocation}}
     {{> performanceChart}}
+    <div class="card-box sync">
+      <div class="card-box-title">
+        Last Sync
+      </div>
+      <div class="card-box-small-content">
+        <div class="sync-message">
+          {{#if syncStatus.last_synced}}
+            {{humanDuration syncStatus.last_synced}} ago
+            <!--<span class="last-synced">{{syncStatus.last_synced}}</span>-->
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    <div class="card-box asset-box logout">
+      <button data-logout type="button" class="logout-button" onclick="Meteor.logout()">
+        Logout
+      </button>
+    </div>
   </div>
-  <p>
-    <center class="sync-message">
-      {{#if syncStatus.last_synced}}
-        {{humanDuration syncStatus.last_synced}} ago
-        <span class="last-synced"> - {{syncStatus.last_synced}}</span>
-      {{/if}}
-    </center>
-  </p>
+
   {{#if syncStatus.errorMsg}}
   <p>
     <center>
@@ -53,7 +64,9 @@
     </center>
   </p>
   {{/if}}
+
   {{> displayHoldings}}
+
 </template>
 
 <template name="user">
@@ -181,7 +194,7 @@
         <input data-edit-holding-symbol type="text" value="{{symbol}}" placeholder="Coin ID" id="coin-symbol-input-{{_id}}"/>
       </div>
       <div class="card-box-small-content">
-        <input data-edit-holding-quantity type="text" value="{{quantity}}" placeholder="Coin Quantity"/>
+        <input data-edit-holding-quantity type="text" value="{{#if quantity}}{{quantity}}{{/if}}" placeholder="Coin Quantity"/>
       </div>
       <div class="card-box-small-content">
         <span class="asset-cash-value">

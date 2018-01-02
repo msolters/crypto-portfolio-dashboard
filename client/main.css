@@ -63,8 +63,9 @@ ul {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-areas:
-    "user-info"
     "logout"
+    "user-info"
+    "sync"
     "total"
     "invested"
     "return"
@@ -203,7 +204,7 @@ input[data-edit-invested] {
       "history history performance"
       "history history performance-chart"
       "history history allocation"
-      ". user-info logout";
+      "user-info sync logout";
   }
   .at-form {
     zoom: 100%;
@@ -220,6 +221,7 @@ input[data-edit-invested] {
 }
 .sync-message {
   font-size: 92%;
+  text-align: center;
 }
 
 .grid {
@@ -240,7 +242,6 @@ input[data-edit-invested] {
   align-items: stretch;
 }
 .asset-box {
-  grid-column: span 1;
   padding: 0px;
 }
 .asset-box input {
@@ -265,7 +266,7 @@ button[data-add-coin] {
   width: 100%;
 }
 button[data-logout] {
-  font-size: 1.3em;
+  font-size: 1em;
   width: 100%;
   height: 100%;
   background-color: #962323;
