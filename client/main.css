@@ -207,7 +207,16 @@ input[data-edit-invested] {
   width: 5em;
   font-weight: bold;
 }
-
+.dashboard-button {
+  color: #fff;
+  padding: 1em 2em;
+  background-color: #228B22;
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 100%;
+  font-size: 2em;
+}
 @media screen and (min-width: 1000px) {
   body {
     font-size: 100%;
@@ -225,6 +234,9 @@ input[data-edit-invested] {
   }
   .at-form {
     zoom: 100%;
+  }
+  .dashboard-button {
+    font-size: 1em;
   }
   option {
     font-size: 1em;
@@ -246,15 +258,6 @@ input[data-edit-invested] {
 
 .grid {
   display: grid;
-}
-.dashboard-button {
-  color: #fff;
-  padding: 1em 2em;
-  background-color: #228B22;
-  border: none;
-  outline: none;
-  width: 100%;
-  height: 100%;
 }
 .card-box-inner {
   padding: 1em;
