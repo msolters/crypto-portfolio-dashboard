@@ -51,7 +51,7 @@
       </div>
     </div>
     <div class="card-box asset-box logout">
-      <button data-logout type="button" class="logout-button" onclick="Meteor.logout()">
+      <button data-logout type="button" class="logout-button" onclick="Meteor.logout(function(){FlowRouter.go('/')})">
         Logout
       </button>
     </div>

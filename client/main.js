@@ -3,14 +3,6 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import './main.html';
 
-Template.body.onCreated( function() {
-
-})
-
-Template.body.events({
-
-})
-
 Template.registerHelper('portfolio', () => {
   return PortfolioSnapshots.findOne({}, {
     sort: {
@@ -48,7 +40,7 @@ Template.registerHelper('performancePercent', () => {
   if( !portfolio || isNaN(portfolio.performance) || portfolio.performance === Infinity ) return '---'
   return portfolio.performance.toFixed(2)
 })
-  Template.registerHelper('coinValue', (coin) => {
+Template.registerHelper('coinValue', (coin) => {
   let portfolio = PortfolioSnapshots.findOne({}, {
     sort: {
       ts: -1

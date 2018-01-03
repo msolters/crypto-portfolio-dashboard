@@ -21,8 +21,12 @@ body {
     font-size: 175%;
   }
 }
+.center {
+  text-align: center;
+}
 button {
   opacity: 0.9;
+  cursor: pointer;
 }
 button:hover {
   opacity: 1;
@@ -243,7 +247,15 @@ input[data-edit-invested] {
 .grid {
   display: grid;
 }
-
+.dashboard-button {
+  color: #fff;
+  padding: 1em 2em;
+  background-color: #228B22;
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 100%;
+}
 .card-box-inner {
   padding: 1em;
   width: calc(100% - 2em);
