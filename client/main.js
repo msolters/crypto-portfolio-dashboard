@@ -52,13 +52,13 @@ Template.registerHelper('coinValue', (coin) => {
   return accounting.formatMoney(coin_data.coin_value || 0)
 })
 Template.registerHelper('coinPrice', (coin) => {
-  let portfolio = PortfolioSnapshots.findOne({}, {
+  let market = MarketSnapshots.findOne({}, {
     sort: {
       ts: -1
     }
   })
-  if( !portfolio ) return accounting.formatMoney(0)
-  let coin_data = _.findWhere(portfolio.coins, {id: coin})
+  if( !market ) return accounting.formatMoney(0)
+  let coin_data = _.findWhere(market.coins, {id: coin})
   if( !coin_data ) return accounting.formatMoney(0)
   return accounting.formatMoney(coin_data.price_usd/coin_data.samples || 0)
 })

@@ -49,3 +49,13 @@ Meteor.publish( "Funds", function() {
   }
   return Funds.find(q_)
 })
+Meteor.publish( "LastMarketSnapshot", function( granularity ) {
+  return MarketSnapshots.find({
+    granularity: granularity
+  }, {
+    sort: {
+      ts: -1
+    },
+    limit: 1
+  })
+})
