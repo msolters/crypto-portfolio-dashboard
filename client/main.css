@@ -98,6 +98,9 @@ select {
 option {
   font-size: 0.5em;
 }
+.grid {
+  display: grid;
+}
 .console-grid > div {
   overflow: hidden;
   border-radius: 5px;
@@ -131,11 +134,14 @@ option {
   font-family: 'Fira Code Light';
 }
 .card-box-content {
-  font-size: 3em;
+  font-size: 2em;
   color: #fff;
   font-family: 'Fira Code Bold';
 }
-
+.card-box-inner {
+  padding: 1em;
+  width: calc(100% - 2em);
+}
 .total {
   grid-area: total;
 }
@@ -150,11 +156,11 @@ option {
 }
 .allocation {
   grid-area: allocation;
-  min-height: 400px;
+  min-height: 300px;
 }
 .history {
   grid-area: history;
-  min-height: 400px;
+  min-height: 300px;
   padding-right: 20px;
 }
 .performance-chart {
@@ -217,36 +223,6 @@ input[data-edit-invested] {
   height: 100%;
   font-size: 2em;
 }
-@media screen and (min-width: 1000px) {
-  body {
-    font-size: 100%;
-  }
-  .console-grid {
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 10px;
-    grid-template-areas:
-      "granularity-minute granularity-hour granularity-day"
-      "total invested return"
-      "history history performance"
-      "history history performance-chart"
-      "history history allocation"
-      "user-info sync logout";
-  }
-  .at-form {
-    zoom: 100%;
-  }
-  .dashboard-button {
-    font-size: 1em;
-  }
-  option {
-    font-size: 1em;
-  }
-  .granularity.minute,
-  .granularity.day {
-    margin: initial;
-  }
-}
-
 .last-synced {
   font-family: 'Fira Code Light';
   color: #aaa;
@@ -254,14 +230,6 @@ input[data-edit-invested] {
 .sync-message {
   font-size: 92%;
   text-align: center;
-}
-
-.grid {
-  display: grid;
-}
-.card-box-inner {
-  padding: 1em;
-  width: calc(100% - 2em);
 }
 #asset-grid {
   display: grid;
@@ -334,6 +302,41 @@ input[data-edit-holding-quantity] {
 }
 .asset-cash-price {
   color: #aaa;
+}
+
+@media screen and (min-width: 1000px) {
+  body {
+    font-size: 100%;
+  }
+  .console-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+    grid-template-areas:
+      "granularity-minute granularity-hour granularity-day"
+      "total invested return"
+      "history history performance"
+      "history history performance-chart"
+      "history history allocation"
+      "user-info sync logout";
+  }
+  #asset-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    margin-top: 10px;
+  }
+  .at-form {
+    zoom: 100%;
+  }
+  .dashboard-button {
+    font-size: 1em;
+  }
+  option {
+    font-size: 1em;
+  }
+  .granularity.minute,
+  .granularity.day {
+    margin: initial;
+  }
 }
 @media screen and (min-width: 1280px) {
   #asset-grid {
