@@ -1,6 +1,10 @@
 Template.displayHoldings.helpers({
   holdings() {
-    return Holdings.find()
+    return Holdings.find({}, {
+      sort: {
+        createdAt: -1
+      }
+    })
   }
 })
 
@@ -27,6 +31,7 @@ Template.displayHoldings.events({
       userId: Meteor.userId(),
       symbol: null,
       quantity: 0,
+      createdAt: new Date()
     }
     let holding_id = Holdings.insert(new_coin)
 
