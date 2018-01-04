@@ -41,15 +41,21 @@ Template.registerHelper('performancePercent', () => {
   return portfolio.performance.toFixed(2)
 })
 Template.registerHelper('coinValue', (coin) => {
-  let portfolio = PortfolioSnapshots.findOne({}, {
+  if( coin === null ) {
+    return '---'
+  }
+  let market = MarketSnapshots.findOne({}, {
     sort: {
       ts: -1
     }
   })
-  if( !portfolio ) return accounting.formatMoney(0)
-  let coin_data = _.findWhere(portfolio.coins, {id: coin})
-  if( !coin_data ) return accounting.formatMoney(0)
-  return accounting.formatMoney(coin_data.coin_value || 0)
+  if( !market ) return '---'
+  let holding = Holdings.findOne({
+    symbol: coin
+  })
+  let coin_data = _.findWhere(market.coins, {id: coin})
+  if( !coin_data ) return '---'
+  return accounting.formatMoney((coin_data.price_usd/coin_data.samples) * holding.quantity || 0)
 })
 Template.registerHelper('coinPrice', (coin) => {
   let market = MarketSnapshots.findOne({}, {
