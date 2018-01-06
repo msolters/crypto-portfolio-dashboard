@@ -70,14 +70,8 @@ Template.performanceChart.onRendered( function() {
       series: []
     });
 
-    self.autorun( () => {
+    const rechart = (snapshots) => {
       let chart = $("#performance-chart").highcharts()
-
-      // Get snapshots
-      let snapshots_q = {}
-      let snapshots = PortfolioSnapshots.find(snapshots_q, {sort: {
-        ts: -1
-      }, limit: 96}).fetch()
 
       // Generate new series data
       let now = new Date()
@@ -92,6 +86,16 @@ Template.performanceChart.onRendered( function() {
         }
       }
 
+      // Delete series that no longer exist
+      _.each( _.map(chart.series, s => s.name), serie => {
+        let series_exists = _.find(Object.keys(series_data), (s) => {
+          return (s === serie)
+        })
+        if( !series_exists ) {
+          chart.get(serie).remove()
+        }
+      })
+
       for( let [serie, data] of Object.entries(series_data) ) {
         let series_exist = _.find(chart.series, (s) => {
           return (s.name === serie)
@@ -101,12 +105,26 @@ Template.performanceChart.onRendered( function() {
         } else {
           chart.addSeries({
             name: serie,
-            data: data
+            data: data,
+            id: serie
           })
         }
       }
 
       chart.redraw()
+    }
+    self.rechart = _.debounce(rechart, 750)
+
+    self.autorun( () => {
+      // Get snapshots
+      let snapshots_q = {}
+      let snapshots = PortfolioSnapshots.find(snapshots_q, {
+        sort: {
+          ts: -1
+        }
+      }).fetch()
+
+      self.rechart( snapshots )
     })
   }, 100)
 })
