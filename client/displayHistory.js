@@ -158,9 +158,26 @@ Template.displayHistory.onRendered( function() {
         }
       }
 
+      let chart_width
+      switch( Session.get('granularity') ) {
+        case 'minute':
+          chart_width = 'hour'
+          break
+        case 'hour':
+          chart_width = 'day'
+          break
+        case 'day':
+          chart_width = 'month'
+          break
+      }
+      chart.xAxis[0].setExtremes(
+        moment().subtract(1, chart_width).toDate().valueOf()-tzOffset,
+        moment().toDate().valueOf()-tzOffset
+      )
+
       chart.redraw()
     }
-    self.rechart = _.debounce(rechart, 750)
+    self.rechart = _.debounce(rechart, 300)
 
     self.autorun( () => {
       // Get snapshots
