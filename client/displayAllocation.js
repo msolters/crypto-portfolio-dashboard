@@ -52,7 +52,7 @@ Template.displayAllocation.onRendered( function() {
       for( let [coin, coin_data] of Object.entries(portfolio.coins) ) {
         serie_data.push({
           name: coin_data.symbol,
-          y: coin_data.coin_value
+          y: (coin_data.total/coin_data.samples)
         })
       }
 

@@ -78,7 +78,7 @@ Template.performanceChart.onRendered( function() {
       let tzOffset = now.getTimezoneOffset() * 60000
       let series_data = {}
       for( let s of snapshots.reverse() ) {
-        let new_point = [s.ts.valueOf()-tzOffset, s.performance]
+        let new_point = [s.ts.valueOf()-tzOffset, (s.performance/s.samples)]
         if( series_data['performance'] ) {
           series_data['performance'].push( new_point )
         } else {
@@ -130,7 +130,7 @@ Template.performanceChart.onRendered( function() {
 
       chart.redraw()
     }
-    self.rechart = _.debounce(rechart, 300)
+    self.rechart = rechart
 
     self.autorun( () => {
       // Get snapshots

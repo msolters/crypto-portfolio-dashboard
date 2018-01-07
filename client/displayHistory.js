@@ -124,11 +124,11 @@ Template.displayHistory.onRendered( function() {
       for( let s of snapshots.reverse() ) {
         if( !s.coins ) continue
         for( let [coin, c] of Object.entries(s.coins) ) {
-          let new_point = [s.ts.valueOf()-tzOffset, c.coin_value]
-          if( !series_data[coin] ) {
-            series_data[coin] = [ new_point ]
+          let new_point = [s.ts.valueOf()-tzOffset, (c.total/c.samples)]
+          if( !series_data[c.symbol] ) {
+            series_data[c.symbol] = [ new_point ]
           } else {
-            series_data[coin].push(new_point)
+            series_data[c.symbol].push(new_point)
           }
         }
       }
@@ -177,7 +177,7 @@ Template.displayHistory.onRendered( function() {
 
       chart.redraw()
     }
-    self.rechart = _.debounce(rechart, 300)
+    self.rechart = rechart
 
     self.autorun( () => {
       // Get snapshots

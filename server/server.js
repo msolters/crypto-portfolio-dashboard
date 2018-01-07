@@ -57,7 +57,6 @@ Meteor.startup(() => {
   })
   MarketSnapshots._ensureIndex({
     _id: 1,
-    processed: 1,
     granularity: 1,
     ts: -1
   })
@@ -73,15 +72,8 @@ Meteor.startup(() => {
   })
   get_market_snapshots()
 
-  //  Process market data into user-specific portfolio data
-  const process_market_snapshots = Meteor.bindEnvironment( () => {
-    Meteor.call('process_market_snapshots')
-    setTimeout( process_market_snapshots, 3000 )
-  })
-  process_market_snapshots()
-
   const process_all_portfolios = Meteor.bindEnvironment( () => {
-    Meteor.call('process_all_user_portfolios')
+    Meteor.call('process_cmc_snapshots')
     setTimeout( process_all_portfolios, 3000 )
   })
   process_all_portfolios()

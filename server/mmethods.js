@@ -1,5 +1,3 @@
-
-
 Meteor.methods({
   'update_allocation_snapshot'() {
     user_q = {
@@ -38,180 +36,7 @@ Meteor.methods({
     })
   },
 
-  'process_portfolios'(market_snapshot_ids, userId) {
-    for( let granularity of ['minute', 'hour', 'day'] ) {
-      //  Get all un-processed market snapshots for this granularity
-      let market_snapshots_q = {
-        _id: {
-          $in: market_snapshot_ids
-        },
-        granularity: granularity
-      }
-      let market_snapshots = MarketSnapshots
-      .find(market_snapshots_q, {
-        sort: {
-          ts: 1
-        }
-      })
-      .fetch()
-      if( !market_snapshots || !market_snapshots.length ) return
-      //console.log(`Processing ${market_snapshots.length} market snapshots...`)
-
-      //  Get the first allocation snapshot corresponding to this market data
-      let first_allocation_snapshot_q = {
-        userId: userId,
-        createdAt: {
-          $lte: market_snapshots[0].ts
-        }
-      }
-      let first_allocation_snapshot_filter = {
-        sort: {
-          createdAt: -1
-        }
-      }
-      let first_allocation_snapshot = AllocationSnapshots.findOne(first_allocation_snapshot_q, first_allocation_snapshot_filter)
-
-      //  Get the remainder of any allocation snapshots corresponding to this
-      //  market data
-      let allocation_snapshot_q = {
-        userId: userId,
-        createdAt: {
-          $gt: market_snapshots[0].ts
-        }
-      }
-      allocation_snapshots = AllocationSnapshots
-      .find(allocation_snapshot_q, {
-        sort: {
-          createdAt: 1
-        }
-      })
-      .fetch()
-
-      //  Combine allocation snapshots into single array
-      if( first_allocation_snapshot ) allocation_snapshots.unshift(first_allocation_snapshot)
-      if( !allocation_snapshots.length ) continue
-      let a_idx = 0
-      let m_idx = 0
-      while( m_idx < market_snapshots.length  ) {
-        while( a_idx < allocation_snapshots.length ) {
-          //  Skip market data we don't have allocations for
-          let skip_flag = false
-          while( m_idx < market_snapshots.length && market_snapshots[m_idx].ts < allocation_snapshots[0].createdAt ) {
-            skip_flag = true
-            m_idx++
-          }
-          if( skip_flag ) m_idx -= 1
-
-          //  Get a new market snapshot
-          let m = market_snapshots[ Math.max(m_idx, 0) ]
-
-          //  Ensure we're using the latest possible allocation snapshot
-          let a_idx_offset = 0
-          while( (a_idx+a_idx_offset <= allocation_snapshots.length-1) && (allocation_snapshots[ a_idx + a_idx_offset ].createdAt <= m.ts) ) a_idx_offset++
-          a_idx += Math.max((a_idx_offset-1), 0)
-
-          //  Get a new allocation snapshot
-          let a = allocation_snapshots[ a_idx ]
-
-          //  Compute a new portfolio snapshot using the
-          Meteor.call('compute_portfolio_snapshot', a, m, userId)
-
-          a_idx++
-        }
-        //  Get the next market snapshot
-        m_idx++
-      }
-    }
-
-    SyncStatus.update({
-      userId: userId
-    }, {
-      $set: {
-        last_synced: new Date()
-      }
-    }, {
-      upsert: true
-    })
-  },
-
-  'process_all_user_portfolios'() {
-    //  Get all un-processed MarketSnapshots
-    let market_snapshot_ids = MarketSnapshots.find({
-      processed: false
-    }, {
-      fields: {
-        _id: 1
-      }
-    }).fetch()
-    market_snapshot_ids = market_snapshot_ids.map(m => m._id)
-
-    //  For all users, process the data in these market snapshots
-    let user_ids = Meteor.users.find({}, {
-      fields: {
-        _id: 1
-      }
-    })
-    user_ids = user_ids.map(u => u._id)
-    _.each(user_ids, (userId) => {
-      Meteor.call('process_portfolios', market_snapshot_ids, userId)
-    })
-
-    //  Mark un-processed MarketSnapshots as processed
-    MarketSnapshots.update({
-      _id: {
-        $in: market_snapshot_ids
-      }
-    }, {
-      $set: {
-        processed: true
-      }
-    }, {
-      multi: true
-    })
-  },
-
-  'compute_portfolio_snapshot'(a, m, userId) {
-    let portfolio_snapshot = {
-      userId: userId,
-      ts: m.createdAt,
-      coins: {}
-    }
-
-    let invested = (a.invested) ? a.invested : 0
-    let portfolio_snapshot_q = {
-      userId: userId,
-      ts: m.ts,
-      granularity: m.granularity
-    }
-    let portfolio_snapshot_modifier = {
-      $set: {
-        invested: invested
-      }
-    }
-
-    let total_portfolio_value = 0
-    _.each(a.coins, (quantity, coin) => {
-      let coin_data = _.findWhere(m.coins, {
-        id: coin
-      })
-      if( !coin_data ) return
-      coin_data.coin_value = coin_data.price_usd * quantity / coin_data.samples
-      total_portfolio_value += coin_data.coin_value
-      portfolio_snapshot_modifier.$set[`coins.${coin}`] = coin_data
-    })
-
-    let return_value = total_portfolio_value - invested
-    portfolio_snapshot_modifier.$set.total = total_portfolio_value
-    portfolio_snapshot_modifier.$set.return = return_value
-    portfolio_snapshot_modifier.$set.performance = (invested) ? return_value / invested * 100 : 0
-    PortfolioSnapshots.update( portfolio_snapshot_q, portfolio_snapshot_modifier, {upsert: true} )
-  },
-
-  /**
-   * Find all un-processed CoinmarketcapSnapshots
-   * Generate/update aggregated MarketSnapshots based on the new data.
-   */
-  'process_market_snapshots'() {
+  'update_market_snapshots'(cmc_snapshot_ids) {
     const ts_aggregate_filters = {
       'minute': {
         year: {
@@ -269,19 +94,8 @@ Meteor.methods({
       }
     }
 
-    //  Get all un-processed CoinmarketcapSnapshots
-    let cmc_snapshot_ids = CoinmarketcapSnapshots.find({
-      processed: false
-    }, {
-      fields: {
-        _id: 1
-      }
-    }).fetch()
-    cmc_snapshot_ids = cmc_snapshot_ids.map(cmc => cmc._id)
-
     for( let [granularity, aggregation_filter] of Object.entries(ts_aggregate_filters) ) {
       let pipeline = [
-        //  Get all unprocessed CoinmarketcapSnapshots
         {
           $match: {
             _id: {
@@ -341,9 +155,7 @@ Meteor.methods({
         }
         let market_snapshot_modifier = {
           $inc: {},
-          $set: {
-            processed: false
-          }
+          $set: {}
         }
         //  Update each coin
         _.each(m.coins, (c) => {
@@ -355,19 +167,6 @@ Meteor.methods({
         MarketSnapshots.update(market_snapshot_q, market_snapshot_modifier, {upsert: true})
       })
     }
-
-    //  Mark cmc_snapshot_ids as being processed
-    CoinmarketcapSnapshots.update({
-      _id: {
-        $in: cmc_snapshot_ids
-      }
-    }, {
-      $set: {
-        processed: true
-      }
-    }, {
-      multi: true
-    })
   },
 
   'update_funds'(invested) {
@@ -432,5 +231,137 @@ Meteor.methods({
         }
       })
     }
-  }
+  },
+
+  /**
+   * Find all un-processed CoinmarketcapSnapshots
+   * Generate/update aggregated MarketSnapshots based on the new data.
+   */
+  'process_cmc_snapshots'() {
+    //  Get all un-processed CoinmarketcapSnapshots
+    let cmc_snapshots = CoinmarketcapSnapshots.find({
+      processed: false
+    }).fetch()
+    cmc_snapshot_ids = cmc_snapshots.map(cmc => cmc._id)
+
+    //  Average reports for all users
+    Meteor.call('update_market_snapshots', cmc_snapshot_ids)
+
+    //  Process each CMC snapshot
+    _.each(cmc_snapshots, (cmc_snapshot) => {
+      Meteor.call('process_cmc_snapshot', cmc_snapshot)
+    })
+
+    //  Mark cmc_snapshot_ids as being processed
+    CoinmarketcapSnapshots.update({
+      _id: {
+        $in: cmc_snapshot_ids
+      }
+    }, {
+      $set: {
+        processed: true
+      }
+    }, {
+      multi: true
+    })
+  },
+
+  /**
+   * Process a cmc_snapshot for all users
+   */
+  'process_cmc_snapshot'(cmc_snapshot) {
+    //  Update portfolios, per-user
+    let user_ids = Meteor.users.find({}, {
+      fields: {
+        _id: 1
+      }
+    })
+    .map(u => u._id)
+    _.each(user_ids, (userId) => {
+      Meteor.call('process_cmc_snapshot_user', cmc_snapshot, userId)
+    })
+  },
+
+  /**
+   * Process a Coinmarketcap snapshot for all granularity levels
+   * of a specific user
+   */
+  'process_cmc_snapshot_user'(cmc_snapshot, userId) {
+    //  Get: AllocationSnapshot
+    let allocation_snapshot_q = {
+      createdAt: {
+        $lte: cmc_snapshot.createdAt
+      }
+    }
+    let allocation_filter = {
+      sort: {
+        createdAt: -1
+      },
+      limit: 1
+    }
+    let allocation_snapshot = AllocationSnapshots
+      .find(allocation_snapshot_q, allocation_filter)
+      .fetch()[0]
+    if( !allocation_snapshot ) return
+    let invested = (allocation_snapshot.invested) ? allocation_snapshot.invested : 0
+
+    //  Compute: Portfolio changes
+    let updated_coin_data = {}
+    let total_portfolio_value = 0
+    _.each(allocation_snapshot.coins, (quantity, coin) => {
+      let coin_data = _.findWhere(cmc_snapshot.coins, {
+        id: coin
+      })
+      if( !coin_data ) return // skip this coin
+      coin_data.coin_value = coin_data.price_usd * quantity
+      total_portfolio_value += coin_data.coin_value
+      updated_coin_data[coin] = coin_data
+    })
+    let return_value = total_portfolio_value - invested
+    let performance = (invested) ? return_value / invested * 100 : 0
+
+    //  Set: Portfolio changes per granularity level
+    for( let granularity of ['minute', 'hour', 'day'] ) {
+      let ts = moment.utc(cmc_snapshot.createdAt).startOf(granularity).toDate()
+
+      let portfolio_snapshot_q = {
+        userId: userId,
+        ts,
+        granularity
+      }
+      let portfolio_snapshot_modifier = {
+        $inc: {
+          invested: invested,
+          total: total_portfolio_value,
+          return: return_value,
+          performance,
+          samples: 1
+        },
+        $set: {}
+      }
+
+      _.each(updated_coin_data, (coin_data, coin) => {
+        portfolio_snapshot_modifier.$set[`coins.${coin}.symbol`] = coin_data.name
+        portfolio_snapshot_modifier.$inc[`coins.${coin}.samples`] = 1
+        portfolio_snapshot_modifier.$inc[`coins.${coin}.total`] = coin_data.coin_value
+      })
+
+      PortfolioSnapshots.update(
+        portfolio_snapshot_q,
+        portfolio_snapshot_modifier,
+        {upsert: true}
+      )
+    }
+
+    SyncStatus.update({
+      userId: userId
+    }, {
+      $set: {
+        last_synced: new Date()
+      }
+    }, {
+      upsert: true
+    })
+  },
+
 })

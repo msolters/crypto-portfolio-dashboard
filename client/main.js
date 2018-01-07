@@ -38,7 +38,16 @@ Template.registerHelper('performancePercent', () => {
     }
   })
   if( !portfolio || isNaN(portfolio.performance) || portfolio.performance === Infinity ) return '---'
-  return portfolio.performance.toFixed(2)
+  return (portfolio.performance/portfolio.samples).toFixed(2)
+})
+Template.registerHelper('portfolioMoneyStat', (property) => {
+  let portfolio = PortfolioSnapshots.findOne({}, {
+    sort: {
+      ts: -1
+    }
+  })
+  if( !portfolio || isNaN(portfolio[property]) ) return '---'
+  return accounting.formatMoney(portfolio[property]/portfolio.samples)
 })
 Template.registerHelper('coinValue', (coin) => {
   if( coin === null ) {
