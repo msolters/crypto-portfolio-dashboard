@@ -26,7 +26,7 @@ Template.displayAllocation.onRendered( function() {
           cursor: 'pointer',
           dataLabels: {
               enabled: true,
-              format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+              format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
               style: {
                   color: "#fff"
               }
