@@ -214,7 +214,6 @@ Meteor.methods({
       })
       if( market_snapshot ) {
         MarketSnapshots.remove({
-          processed: true,
           granularity: granularity,
           ts: {
             $lt: market_snapshot.ts

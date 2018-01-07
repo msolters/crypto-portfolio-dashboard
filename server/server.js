@@ -49,6 +49,10 @@ const get_market_snapshot = () => {
 
 Meteor.startup(() => {
   //  Establish DB indices
+  CoinmarketcapSnapshots._ensureIndex({
+    _id: 1,
+    processed: 1
+  })
   PortfolioSnapshots._ensureIndex({
     _id: 1,
     userId: 1,
