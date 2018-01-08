@@ -244,11 +244,11 @@ Meteor.methods({
     cmc_snapshot_ids = cmc_snapshots.map(cmc => cmc._id)
 
     //  Average reports for all users
-    Meteor.call('update_market_snapshots', cmc_snapshot_ids)
+    Meteor.call('update_market_snapshots', cmc_snapshot_ids, (e, r) => {console.error(e)})
 
     //  Process each CMC snapshot
     _.each(cmc_snapshots, (cmc_snapshot) => {
-      Meteor.call('process_cmc_snapshot', cmc_snapshot)
+      Meteor.call('process_cmc_snapshot', cmc_snapshot, (e, r) => {console.error(e)})
     })
 
     //  Mark cmc_snapshot_ids as being processed
