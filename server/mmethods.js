@@ -103,6 +103,9 @@ Meteor.methods({
             }
           },
         },
+        {
+          $limit: 10
+        },
         //  Make a separate document for each unique {date, coin} pair
         {
           $unwind: '$coins'
