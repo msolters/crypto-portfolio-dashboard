@@ -348,6 +348,8 @@ Meteor.methods({
         portfolio_snapshot_modifier.$inc[`coins.${coin}.total`] = coin_data.coin_value
       })
 
+      if( !Object.keys(portfolio_snapshot_modifier.$set).length ) delete portfolio_snapshot_modifier.$set
+
       PortfolioSnapshots.update(
         portfolio_snapshot_q,
         portfolio_snapshot_modifier,
