@@ -143,7 +143,8 @@ Template.displayHistory.onRendered( function() {
         }
       })
 
-      for( let [serie, data] of Object.entries(series_data) ) {
+      series_data_sorted = _.sortBy(Object.entries(series_data), s => s[0])
+      for( let [serie, data] of series_data_sorted ) {
         let series_exist = _.find(chart.series, (s) => {
           return (s.name === serie)
         })
