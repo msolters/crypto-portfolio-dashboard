@@ -291,6 +291,7 @@ Meteor.methods({
   'process_cmc_snapshot_user'(cmc_snapshot, userId) {
     //  Get: AllocationSnapshot
     let allocation_snapshot_q = {
+      userId: userId,
       createdAt: {
         $lte: cmc_snapshot.createdAt
       }
