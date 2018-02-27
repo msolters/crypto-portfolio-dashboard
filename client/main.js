@@ -3,16 +3,6 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import './main.html';
 
-Template.body.onCreated( function() {
-  const tmpl = this
-  tmpl.subscribe("Funds")
-  tmpl.subscribe("Holdings")
-  tmpl.subscribe("SyncStatus")
-})
-
-Template.body.events({
-})
-
 Template.registerHelper('portfolio', () => {
   return PortfolioSnapshots.findOne({}, {
     sort: {
@@ -38,28 +28,52 @@ Template.registerHelper('formatFixed', (m) => {
   return m.toFixed(2)
 })
 Template.registerHelper('invested', () => {
-  if( Funds.findOne({_id: "invested"}) ) return Funds.findOne({_id: "invested"}).value
+  if( Funds.findOne() ) return Funds.findOne().invested
   return "0"
 })
-Template.registerHelper('coinValue', (coin) => {
+Template.registerHelper('performancePercent', () => {
   let portfolio = PortfolioSnapshots.findOne({}, {
     sort: {
       ts: -1
     }
   })
-  if( !portfolio ) return accounting.formatMoney(0)
-  let coin_data = _.findWhere(portfolio.coins, {id: coin})
-  if( !coin_data ) return accounting.formatMoney(0)
-  return accounting.formatMoney(coin_data.coin_value || 0)
+  if( !portfolio || isNaN(portfolio.performance) || portfolio.performance === Infinity ) return '---'
+  return (portfolio.performance/portfolio.samples).toFixed(2)
+})
+Template.registerHelper('portfolioMoneyStat', (property) => {
+  let portfolio = PortfolioSnapshots.findOne({}, {
+    sort: {
+      ts: -1
+    }
+  })
+  if( !portfolio || isNaN(portfolio[property]) ) return '---'
+  return accounting.formatMoney(portfolio[property]/portfolio.samples)
+})
+Template.registerHelper('coinValue', (coin) => {
+  if( coin === null ) {
+    return '---'
+  }
+  let market = MarketSnapshots.findOne({}, {
+    sort: {
+      ts: -1
+    }
+  })
+  if( !market ) return '---'
+  let holding = Holdings.findOne({
+    symbol: coin
+  })
+  let coin_data = _.findWhere(market.coins, {id: coin})
+  if( !coin_data ) return '---'
+  return accounting.formatMoney((coin_data.price_usd/coin_data.samples) * holding.quantity || 0)
 })
 Template.registerHelper('coinPrice', (coin) => {
-  let portfolio = PortfolioSnapshots.findOne({}, {
+  let market = MarketSnapshots.findOne({}, {
     sort: {
       ts: -1
     }
   })
-  if( !portfolio ) return accounting.formatMoney(0)
-  let coin_data = _.findWhere(portfolio.coins, {id: coin})
+  if( !market ) return accounting.formatMoney(0)
+  let coin_data = _.findWhere(market.coins, {id: coin})
   if( !coin_data ) return accounting.formatMoney(0)
   return accounting.formatMoney(coin_data.price_usd/coin_data.samples || 0)
 })

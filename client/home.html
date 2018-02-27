@@ -1,0 +1,672 @@
+<template name="home">
+  <div class="page-container">
+    <div class="card-box">
+      <h1>Cryptometry.io</h1>
+    </div>
+
+    <div class="card-box transparent">
+      <div class="card-box-small-content">
+        <a href="/dashboard">
+          <button type="button" class="dashboard-button">
+            Open Dashboard
+          </button>
+        </a>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <div class="card-box-title">
+        What is Cryptometry?
+      </div>
+      <div class="card-box-small-content">
+        <p>
+          When you own multiple cryptocurrencies &mdash; especially altcoins &mdash; you frequently find yourself tracking multiple prices across different exchanges, or with a meta-index such as <a href="https://coinmarketcap.com" target="_blank">Coinmarketcap.com</a> or <a href="https://cryptowat.ch" target="_blank">Cryptowat.ch</a>.
+        </p>
+        <p>
+          While these can be helpful tools, the burden is still on the investor to manually do the math to compute your total portfolio performance.
+        </p>
+        <p>
+          This leads to several questions:
+          <ul>
+            <li>
+              => What is the <i>total</i> effective return across all the currencies that I own?
+            </li>
+            <li>
+              => To what extent is each of my holdings responsible for my portfolio's current performance?
+            </li>
+            <li>
+              => What is the total effective ROI, across all the currencies that I own?
+            </li>
+          </ul>
+        </p>
+        <p>
+          <b>Cryptometry.io</b> is a free web app that provides a convenient solution to track, store, and visualize portfolio metrics such as these, available in realtime from your smartphone or desktop computer!
+        </p>
+      </div>
+    </div>
+
+    <div class="card-box transparent">
+      <div class="card-box-title">
+        Features
+      </div>
+      <div class="card-box-small-content">
+        <h3>Track All Coins in One Place</h3>
+        <p>
+          Just use Cryptometry's GUI to add the coins you want to track, as well as how much of each you own!  <a href="#supported-coins">See a list of supported coins below.</a>
+        </p>
+      </div>
+      <div class="card-box-small-content wide center">
+        <img src="imgs/screenshot-coins.png"/>
+      </div>
+      <br>
+      <div class="card-box-small-content">
+        <h3>Calculate Total Return + ROI</h3>
+        <p>
+          Enter the total amount of cash you've bought into the crypto markets.  The app will automatically figure out and track your ROI.  Changes to your holdings will be stored historically.
+        </p>
+      </div>
+      <div class="card-box-small-content wide center">
+        <img src="imgs/screenshot-invested.png"/>
+      </div>
+    </div>
+
+    <div class="card-box transparent">
+      <div class="card-box-title">
+        Screenshot
+      </div>
+      <div class="card-box-small-content wide">
+        <a href="imgs/screenshot-1.png" target="_blank">
+          <img src="imgs/screenshot-1.png"/>
+        </a>
+      </div>
+    </div>
+
+    <br>
+
+    {{> turnkey}}
+
+    <br>
+
+    <div class="card-box">
+      <div class="card-box-title">
+        Donations
+      </div>
+      <div class="card-box-small-content">
+        <p>
+          It takes money to keep this app running, and it is offered free to use!  If this app has helped make your life any easier, consider donating to one of the developer wallets below:
+        </p>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <div class="card-box-title">
+        Ethereum
+      </div>
+      <div class="card-box-small-content center">
+        <p>
+          0xca14d4f8c9EC87cB971E994C8f86e3A6de7fCA4a
+        </p>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <div class="card-box-title">
+        Bitcoin
+      </div>
+      <div class="card-box-small-content center">
+        <p>
+          1FVJqcqQyTxBgvwZDC4wYRPfxWeeKbqFy3
+        </p>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <div class="card-box-title">
+        Litecoin
+      </div>
+      <div class="card-box-small-content center">
+        <p>
+          LL2PvQGaoaNuNQxChimkLTPTk8tfTgWbLn
+        </p>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <div class="card-box-title">
+        Ripple
+      </div>
+      <div class="card-box-small-content center">
+        <p>
+          rJBsh8Aef9A53kyB9MDKBWaacDGoXoUb7J
+        </p>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <div class="card-box-title">
+        Qtum
+      </div>
+      <div class="card-box-small-content center">
+        <p>
+          Qcwt71NhrqC1qgrxyRvXK69eFCCtByR8KV
+        </p>
+      </div>
+    </div>
+
+    <br>
+
+    <div id="supported-coins" class="card-box">
+      <div class="card-box-title">
+        Supported Coins
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        bitcoin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        ripple
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        ethereum
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        bitcoin-cash
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        cardano
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        litecoin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        iota
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        nem
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        stellar
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        dash
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        monero
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        eos
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        neo
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        bitcoin-gold
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        qtum
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        raiblocks
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        tron
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        ethereum-classic
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        lisk
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        bitconnect
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        icon
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        verge
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        bitshares
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        omisego
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        zcash
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        ardor
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        stratis
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        populous
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        tether
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        waves
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        hshare
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        bytecoin-bcn
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        komodo
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        dogecoin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        steem
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        siacoin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        status
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        binance-coin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        augur
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        golem-network-tokens
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        ark
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        decred
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        veritaseum
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        vechain
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        salt
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        digibyte
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        nxt
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        pivx
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        factom
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        monacoin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        request-network
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        byteball
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        maidsafecoin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        basic-attention-token
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        zcoin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        dragonchain
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        tenx
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        0x
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        electroneum
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        kyber-network
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        wax
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        bitcoindark
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        syscoin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        power-ledger
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        funfair
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        bytom
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        kucoin-shares
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        aion
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        digixdao
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        santiment
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        vertcoin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        civic
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        qash
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        aeternity
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        storj
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        experience-points
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        ethos
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        reddcoin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        gas
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        walton
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        skycoin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        gamecredits
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        aelf
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        kin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        chainlink
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        iconomi
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        rchain
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        gnosis-gno
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        quantstamp
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        raiden-network-token
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        enigma-project
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        substratum
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        nav-coin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        decentraland
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        triggers
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        smartcash
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        bridgecoin
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        bancor
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        ubiq
+      </div>
+    </div>
+    <div class="card-box">
+      <div class="card-box-small-content center">
+        blocknet
+      </div>
+    </div>
+
+    <br>
+
+    <div id="supported-coins" class="card-box">
+      <div class="card-box-title">
+        &copy; Mark Solters 2018
+      </div>
+    </div>
+  </div>
+</template>

@@ -48,23 +48,41 @@ const get_market_snapshot = () => {
 }
 
 Meteor.startup(() => {
-  if( !Funds.findOne({_id: 'invested'}) ) {
-    Funds.insert({
-      _id: "invested",
-      value: 0
-    })
-  }
+  //  Establish DB indices
+  CoinmarketcapSnapshots._ensureIndex({
+    _id: 1,
+    processed: 1
+  })
+  PortfolioSnapshots._ensureIndex({
+    _id: 1,
+    userId: 1,
+    granularity: 1,
+    ts: 1
+  })
+  MarketSnapshots._ensureIndex({
+    _id: 1,
+    granularity: 1,
+    ts: -1
+  })
+  Holdings._ensureIndex({
+    _id: 1,
+    userId: 1
+  })
 
   //  Get and store market data every 1 minute
-  get_market_snapshot()
-  Meteor.setInterval( get_market_snapshot, 5000 )
+  const get_market_snapshots = Meteor.bindEnvironment( () => {
+    get_market_snapshot()
+    setTimeout( get_market_snapshots, 5000 )
+  })
+  get_market_snapshots()
 
-  //  Process market data into user-specific portfolio data
-  Meteor.setInterval( () => {
-    Meteor.call('process_market_snapshots')
-  }, 3000)
+  const process_all_portfolios = Meteor.bindEnvironment( () => {
+    Meteor.call('process_cmc_snapshots')
+    setTimeout( process_all_portfolios, 3000 )
+  })
+  process_all_portfolios()
 
   Meteor.setInterval( () => {
-    Meteor.call('process_portfolios')
-  }, 3000)
+    Meteor.call('cleanup_documents')
+  }, 60000)
 });

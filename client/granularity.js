@@ -8,6 +8,12 @@ Template.granularity.onCreated( function() {
   tmpl.autorun( function() {
     tmpl.subscribe("PortfolioSnapshots", tmpl.granularity.get(), tmpl.timer.get())
   })
+  tmpl.autorun( function() {
+    tmpl.subscribe("LastMarketSnapshot", tmpl.granularity.get())
+  })
+  tmpl.autorun( function() {
+    Session.set('granularity', tmpl.granularity.get())
+  })
 })
 
 Template.granularity.events({

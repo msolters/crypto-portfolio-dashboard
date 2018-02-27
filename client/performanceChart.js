@@ -70,27 +70,31 @@ Template.performanceChart.onRendered( function() {
       series: []
     });
 
-    self.autorun( () => {
+    const rechart = (snapshots) => {
       let chart = $("#performance-chart").highcharts()
-
-      // Get snapshots
-      let snapshots_q = {}
-      let snapshots = PortfolioSnapshots.find(snapshots_q, {sort: {
-        ts: -1
-      }, limit: 96}).fetch()
 
       // Generate new series data
       let now = new Date()
       let tzOffset = now.getTimezoneOffset() * 60000
       let series_data = {}
       for( let s of snapshots.reverse() ) {
-        let new_point = [s.ts.valueOf()-tzOffset, s.performance]
+        let new_point = [s.ts.valueOf()-tzOffset, (s.performance/s.samples)]
         if( series_data['performance'] ) {
           series_data['performance'].push( new_point )
         } else {
           series_data['performance'] = [ new_point ]
         }
       }
+
+      // Delete series that no longer exist
+      _.each( _.map(chart.series, s => s.name), serie => {
+        let series_exists = _.find(Object.keys(series_data), (s) => {
+          return (s === serie)
+        })
+        if( !series_exists ) {
+          chart.get(serie).remove()
+        }
+      })
 
       for( let [serie, data] of Object.entries(series_data) ) {
         let series_exist = _.find(chart.series, (s) => {
@@ -101,12 +105,43 @@ Template.performanceChart.onRendered( function() {
         } else {
           chart.addSeries({
             name: serie,
-            data: data
+            data: data,
+            id: serie
           })
         }
       }
 
+      let chart_width
+      switch( Session.get('granularity') ) {
+        case 'minute':
+          chart_width = 'hour'
+          break
+        case 'hour':
+          chart_width = 'day'
+          break
+        case 'day':
+          chart_width = 'month'
+          break
+      }
+      chart.xAxis[0].setExtremes(
+        moment().subtract(1, chart_width).toDate().valueOf()-tzOffset,
+        moment().toDate().valueOf()-tzOffset
+      )
+
       chart.redraw()
+    }
+    self.rechart = rechart
+
+    self.autorun( () => {
+      // Get snapshots
+      let snapshots_q = {}
+      let snapshots = PortfolioSnapshots.find(snapshots_q, {
+        sort: {
+          ts: -1
+        }
+      }).fetch()
+
+      self.rechart( snapshots )
     })
   }, 100)
 })

@@ -1,0 +1,37 @@
+.page-container {
+  padding-top: 2em;
+  padding-left: 2%;
+  padding-right: 2%;
+  width: 96%;
+}
+@media screen and (min-width: 1280px) {
+  .page-container {
+    padding-left: 10%;
+    padding-right: 10%;
+    width: 80%;
+  }
+}
+.page-container .card-box {
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+}
+.page-container p {
+  white-space: wrap;
+}
+.page-container img {
+  box-sizing: border-box;
+  max-width: 100%;
+  border: 2px solid #3c3a3a;
+  border-radius: 5px;
+  padding: 1em;
+}
+.page-container a {
+  color: #228B22;
+  word-wrap: break-word;
+}
+.page-container a:visited {
+  color: #eee;
+}
+ul.count {
+  list-style-type: decimal;
+}

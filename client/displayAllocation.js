@@ -26,7 +26,7 @@ Template.displayAllocation.onRendered( function() {
           cursor: 'pointer',
           dataLabels: {
               enabled: true,
-              format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+              format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
               style: {
                   color: "#fff"
               }
@@ -40,7 +40,7 @@ Template.displayAllocation.onRendered( function() {
 
     self.autorun( () => {
       let portfolio = PortfolioSnapshots.findOne({}, {
-        $sort: {
+        sort: {
           ts: -1
         }
       })
@@ -48,10 +48,11 @@ Template.displayAllocation.onRendered( function() {
 
       let chart = $("#coin-allocation-chart").highcharts()
       let serie_data = []
+      if( !portfolio.coins ) return
       for( let [coin, coin_data] of Object.entries(portfolio.coins) ) {
         serie_data.push({
           name: coin_data.symbol,
-          y: coin_data.coin_value
+          y: (coin_data.total/coin_data.samples)
         })
       }
 

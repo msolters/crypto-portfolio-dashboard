@@ -3,31 +3,76 @@
 </head>
 
 <body>
+  {{> Template.dynamic template=main}}
+</body>
+
+<template name="dashboard">
+  {{#if currentUser }}
+    <div class="dashboard">
+      {{> userConsole}}
+    </div>
+  {{else}}
+    <div class="page-container">
+      {{> turnkey}}
+    </div>
+  {{/if}}
+</template>
+
+<template name="turnkey">
+  <div class="grid">
+    <div class="card-box">
+      <div class="card-box-small-content">
+        {{> atForm state=state}}
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="userConsole">
   <div class="console-grid">
+    {{> user}}
     {{> granularity}}
     {{> displayPerformance}}
     {{> displayHistory}}
     {{> displayReturn}}
     {{> displayAllocation}}
     {{> performanceChart}}
+    <div class="card-box sync">
+      <div class="card-box-title">
+        Last Sync
+      </div>
+      <div class="card-box-small-content">
+        <div class="sync-message">
+          {{#if syncStatus.last_synced}}
+            {{humanDuration syncStatus.last_synced}} ago
+            <!--<span class="last-synced">{{syncStatus.last_synced}}</span>-->
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    <div class="card-box asset-box logout">
+      <button data-logout type="button" class="logout-button" onclick="Meteor.logout(function(){FlowRouter.go('/')})">
+        Logout
+      </button>
+    </div>
   </div>
-  <p>
-    <center>
-      {{#if syncStatus.last_synced}}
-        {{humanDuration syncStatus.last_synced}} ago
-        <span class="last-synced"> - {{syncStatus.last_synced}}</span>
-      {{/if}}
-    </center>
-  </p>
-  {{#if syncStatus.errorMsg}}
-  <p>
-    <center>
-      <span class="error-msg">{{syncStatus.errorMsg}}</span>
-    </center>
-  </p>
-  {{/if}}
+
   {{> displayHoldings}}
-</body>
+
+</template>
+
+<template name="user">
+  <div class="card-box user-info">
+    <div>
+      {{currentUser.emails.[0].address}}
+    </div>
+  </div>
+  <div class="card-box asset-box logout">
+    <button data-logout type="button" class="logout-button" onclick="Meteor.logout()">
+      Logout
+    </button>
+  </div>
+</template>
 
 <template name="granularity">
   <div class="card-box asset-box granularity minute">
@@ -54,7 +99,7 @@
         Performance
       </div>
       <div class="card-box-content">
-        {{formatFixed portfolio.performance}}%
+        {{performancePercent}}%
       </div>
     </span>
   </div>
@@ -79,7 +124,7 @@
         Total
       </div>
       <div class="card-box-content">
-        {{formatMoney portfolio.total}}
+        {{portfolioMoneyStat 'total'}}
       </div>
     </span>
   </div>
@@ -99,7 +144,7 @@
         Return
       </div>
       <div class="card-box-content">
-        {{formatMoney portfolio.return}}
+        {{portfolioMoneyStat 'return'}}
       </div>
     </span>
   </div>
@@ -114,25 +159,7 @@
     </div>
     {{#if holdings}}
       {{#each holdings }}
-        <div class="card-box asset-box">
-          <button data-delete-coin type="button">Delete</button>
-          <div class="card-box-inner">
-            <div class="card-box-title">
-              <input data-edit-holding-symbol type="text" value="{{symbol}}" placeholder="Coin ID"/>
-            </div>
-            <div class="card-box-small-content">
-              <input data-edit-holding-quantity type="text" value="{{quantity}}" placeholder="Coin Quantity"/>
-            </div>
-            <div class="card-box-small-content">
-              <span class="asset-cash-value">
-                {{coinValue symbol}}
-              </span>
-              <span class="asset-cash-price">
-                ({{coinPrice symbol}})
-              </span>
-            </div>
-          </div>
-        </div>
+        {{> coin }}
       {{/each}}
     {{else}}
       <div class="card-box asset-box">
@@ -148,5 +175,27 @@
         </span>
       </div>
     {{/if}}
+  </div>
+</template>
+
+<template name="coin">
+  <div class="card-box asset-box">
+    <button data-delete-coin type="button">Delete</button>
+    <div class="card-box-inner">
+      <div class="card-box-title">
+        {{> select include_blank=false options=available_coins id=_id choice=current_choice }}
+      </div>
+      <div class="card-box-small-content">
+        <input data-edit-holding-quantity type="text" value="{{#if quantity}}{{quantity}}{{/if}}" placeholder="Quantity Owned"/>
+      </div>
+      <div class="card-box-small-content">
+        <span class="asset-cash-value">
+          {{coinValue symbol}}
+        </span>
+        <span class="asset-cash-price">
+          ({{coinPrice symbol}})
+        </span>
+      </div>
+    </div>
   </div>
 </template>
