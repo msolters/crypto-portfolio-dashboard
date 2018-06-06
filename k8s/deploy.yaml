@@ -1,0 +1,44 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    role: crypto-dash
+  name: crypto-dash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: crypto-dash
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        role: crypto-dash
+    spec:
+      containers:
+      - image: gcr.io/kube-sandbox-181504/crypto-portfolio-dashboard:latest
+        imagePullPolicy: Always
+        name: crypto-dash
+#        env:
+
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        # resources:
+        #   requests:
+        #     cpu: 300m
+      - image: gcr.io/kube-sandbox-181504/crypto-proxy:latest
+        imagePullPolicy: Always
+        name: crypto-dash-proxy
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        - containerPort: 443
+          protocol: TCP
+        # resources:
+        #   requests:
+        #     cpu: 300m

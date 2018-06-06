@@ -148,27 +148,31 @@ Meteor.methods({
 
       let market_snapshots = CoinmarketcapSnapshots.aggregate( pipeline )
 
-      //  Update MarketSnapshots based on this data
-      _.each(market_snapshots, (m) => {
-        m.granularity = granularity
-        m.ts = ts_date_constructors[granularity](m._id.ts)
-        let market_snapshot_q = {
-          granularity: m.granularity,
-          ts: m.ts
-        }
-        let market_snapshot_modifier = {
-          $inc: {},
-          $set: {}
-        }
-        //  Update each coin
-        _.each(m.coins, (c) => {
-          market_snapshot_modifier.$set[`coins.${c.id}.id`] = c.id
-          market_snapshot_modifier.$set[`coins.${c.id}.symbol`] = c.symbol
-          market_snapshot_modifier.$inc[`coins.${c.id}.price_usd`] = c.price_usd
-          market_snapshot_modifier.$inc[`coins.${c.id}.samples`] = c.samples
+      market_snapshots.toArray( Meteor.bindEnvironment(
+        function(err, docs) {
+          //  Update MarketSnapshots based on this data
+          _.each(docs, (m) => {
+            m.granularity = granularity
+            m.ts = ts_date_constructors[granularity](m._id.ts)
+            let market_snapshot_q = {
+              granularity: m.granularity,
+              ts: m.ts
+            }
+            let market_snapshot_modifier = {
+              $inc: {},
+              $set: {}
+            }
+            //  Update each coin
+            _.each(m.coins, (c) => {
+              market_snapshot_modifier.$set[`coins.${c.id}.id`] = c.id
+              market_snapshot_modifier.$set[`coins.${c.id}.symbol`] = c.symbol
+              market_snapshot_modifier.$inc[`coins.${c.id}.price_usd`] = c.price_usd
+              market_snapshot_modifier.$inc[`coins.${c.id}.samples`] = c.samples
+            })
+            MarketSnapshots.update(market_snapshot_q, market_snapshot_modifier, {upsert: true})
+          })
         })
-        MarketSnapshots.update(market_snapshot_q, market_snapshot_modifier, {upsert: true})
-      })
+      )
     }
   },
 

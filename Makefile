@@ -1,12 +1,13 @@
 .PHONY: cleanup build deploy
+PROJECT_ID=`gcloud config get-value project -q`
 
-cleanup:
-	rm -rf /tmp/build
-	rm -rf ./bundle
-
-build: cleanup
-	meteor build /tmp/build --architecture os.linux.x86_64
-	tar -xzf /tmp/build/crypto-portfolio-dashboard.tar.gz -C ./
+build:
+	docker build -t gcr.io/$(PROJECT_ID)/crypto-portfolio-dashboard:latest .
+	docker build -t gcr.io/$(PROJECT_ID)/crypto-proxy:latest ./proxy/
 
 deploy:
-	heroku container:push web
+	gcloud docker -- push gcr.io/$(PROJECT_ID)/crypto-portfolio-dashboard:latest
+	gcloud docker -- push gcr.io/$(PROJECT_ID)/crypto-proxy:latest
+	kubectl apply -f k8s/
+
+all: build deploy
